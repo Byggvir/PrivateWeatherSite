@@ -1,0 +1,19 @@
+<?php
+/**
+ * weatherlib.php
+ *
+ * @package default
+ */
+
+
+defined('ABSPATH') or die('No script kiddies please!');
+
+function FahrenheitToCelsius(float $Fahrenheit ) : float {
+	return ($Fahrenheit - 32) * 5/9 ;
+}
+
+function CelsiusToFahrenheit( float $Celsius) : float {
+	return $Celsius * 9 / 5 + 32;
+}
+
+?>

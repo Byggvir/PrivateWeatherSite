@@ -1,0 +1,145 @@
+@charset UTF-8;
+/*
+Styles for ta_speedreport 
+
+Author: Thomas Arend
+Date: 29.07.2018
+Version 0.1.0
+*/
+
+table {
+  font-family: monospace;
+  border : 2px solid blue;
+  
+}
+tr:nth-of-type(even) td {
+    background-color: #cccccc;
+}
+tr:nth-of-type(odd) td {
+    background-color: #ffffff;
+}
+td {
+  padding : 0.2em;
+  margin: 0.3em
+  
+}
+.verybig {
+   font-size : 1em;
+
+}
+
+.parameter {
+
+    background : lightgray ;
+
+}
+
+.result {
+    text-align : center ;
+    
+}
+
+.resultleft {
+    text-align : left ;
+    
+}
+
+.resultright {
+    text-align : right ;
+    
+}
+
+.rowsummary {
+    font-weight: bolder;
+    
+}
+
+.colstart {
+    text-align : center
+    
+}
+
+.colping {
+    width : 5em;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    
+}
+
+.coldownload {
+    width : 5em;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    
+}
+
+.colupload {
+    width : 5em;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    
+}
+
+.colurl {
+    
+    width : 18em;
+    text-align: left;
+
+    
+}
+
+.coltransmitted {
+    
+}
+
+.colreceived
+ {
+    
+}
+
+.collost {
+
+    color: red;
+
+
+}
+
+.colduration {
+    
+}
+
+.colminping {
+    width : 5em;
+    color : green;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    
+}
+
+.colavgping {
+    width : 5em;
+    color : darkblue;
+    font-weight : bold;
+    padding-left:0.5em;
+    padding-right:0.5em;
+}
+
+.colmaxping {
+    width : 5em;
+    color : red;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    
+}
+
+.colmdev {
+    width : 5em;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    
+}
+
+.colpipe
+ {
+     
+ }
