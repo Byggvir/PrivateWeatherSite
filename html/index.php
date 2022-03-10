@@ -75,14 +75,26 @@ WeatherReport();
 
 $mysqli->close();
 
+ // Execute the R script within PHP code
+      // Generates output as test.png image.
+      exec("R/Weather72h.r");
 ?>
+    <div id="r-output" style="width: 100%; padding: 25px;">
+    <img style="width: 960px; padding: 25px;" src="png/temperature_72h.svg" alt="R Graph" />
+    </div>
     <div id="r-output" style="width: 100%; padding: 25px;">
     <?php
       // Execute the R script within PHP code
       // Generates output as test.png image.
-      exec("R/TempC72h.r");
     ?>
-    <img style="width: 960px; padding: 25px;" src="png/TempC72h.png" alt="R Graph" />
+    <img style="width: 960px; padding: 25px;" src="png/air_pressure_72h.svg" alt="R Graph" />
+    </div>
+    <div id="r-output" style="width: 100%; padding: 25px;">
+    <?php
+      // Execute the R script within PHP code
+      // Generates output as test.png image.
+    ?>
+    <img style="width: 960px; padding: 25px;" src="png/solarradiation_72h.svg" alt="R Graph" />
     </div>
 
 </body>

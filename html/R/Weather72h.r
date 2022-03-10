@@ -8,7 +8,7 @@
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <- "TempC72h"
+MyScriptName <- "Weather72h"
 
 options(OutDec=',')
 
@@ -74,7 +74,7 @@ today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
 daten %>% ggplot() + 
-  geom_line( aes( x = Zeit, y = temperature, colour = 'Temperatur' ), size = 0.1 ) +
+  geom_line( aes( x = Zeit, y = temperature, colour = 'Temperatur' ), size = 1 ) +
 
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
@@ -103,11 +103,12 @@ ggsave(  paste(
   , width = 1920
   , height = 1080
   , units = "px"
+  , dpi = 72
 )
 
 daten %>% ggplot() + 
-  geom_line( aes( x = Zeit, y = rel_air_pressure, colour = 'Relativ' ), size = 0.1 ) +
-  geom_line( aes( x = Zeit, y = abs_air_pressure, colour = 'Absolut' ), size = 0.1 ) +
+  geom_line( aes( x = Zeit, y = rel_air_pressure, colour = 'Relativ' ), size = 1 ) +
+  geom_line( aes( x = Zeit, y = abs_air_pressure, colour = 'Absolut' ), size = 1 ) +
   
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
@@ -135,11 +136,12 @@ ggsave(  paste(
   , width = 1920
   , height = 1080
   , units = "px"
+  , dpi = 72
 )
 
 
 daten %>% ggplot() + 
-  geom_line( aes( x = Zeit, y = solarradiation, colour = 'Leistung' ), size = 0.1 ) +
+  geom_line( aes( x = Zeit, y = solarradiation, colour = 'Leistung' ), size = 1 ) +
 
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
@@ -160,11 +162,12 @@ daten %>% ggplot() +
   ) -> P
 
 ggsave(  paste( 
-  file = '../png/Sonneneinstrahlung_72h.svg', sep='')
+  file = '../png/solarradiation_72h.svg', sep='')
   , plot = P
   , device = 'svg'
   , bg = "white"
   , width = 1920
   , height = 1080
   , units = "px"
+  , dpi = 72
 )
