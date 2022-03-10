@@ -83,10 +83,7 @@ daten %>% ggplot() +
   theme_ta() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
-          , strip.text.x = element_text (
-              color = "black"
-            , face = "bold.italic"
-          ) ) +
+          ) +
   labs(  title = paste( 'Temperaturen Rheinbach' )
          , subtitle = 'Letzte 4 Tage'
          , x = "Datum/Zeit"
@@ -116,10 +113,7 @@ daten %>% ggplot() +
   theme_ta() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
-          , strip.text.x = element_text (
-            color = "black"
-            , face = "bold.italic"
-          ) ) +
+  ) +
   labs(  title = paste( 'Luftdruck Rheinbach' )
          , subtitle = 'Letzte 4 Tage'
          , x = "Datum/Zeit"
@@ -149,10 +143,7 @@ daten %>% ggplot() +
   theme_ta() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
-          , strip.text.x = element_text (
-            color = "black"
-            , face = "bold.italic"
-          ) ) +
+  ) +
   labs(  title = paste( 'Sonneneinstrahlung Rheinbach' )
          , subtitle = 'Letzte 4 Tage'
          , x = "Datum/Zeit"

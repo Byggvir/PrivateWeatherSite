@@ -12,25 +12,25 @@
 
 theme_ta <- function (
   base_family = "Helvetica",
-  base_size = 16,
+  base_size = 24,
   plot_title_family = base_family,
-  plot_title_size = 36,
+  plot_title_size = 48,
   plot_title_face = "bold",
-  plot_title_margin = 10,
+  plot_title_margin = 24,
   subtitle_family = base_family,
-  subtitle_size = 24,
+  subtitle_size = 26,
   subtitle_face = "plain",
-  subtitle_margin = 15,
+  subtitle_margin = 24,
   strip_text_family = base_family,
   strip_text_size = 16,
   strip_text_face = "plain",
   caption_family = base_family,
-  caption_size = 12,
+  caption_size = 16,
   caption_face = "italic",
-  caption_margin = 10,
+  caption_margin = 16,
   axis_text_size = base_size,
   axis_title_family = subtitle_family,
-  axis_title_size = 16,
+  axis_title_size = base_size + 8,
   axis_title_face = "plain",
   axis_title_just = "rt",
   plot_margin = margin(30, 30, 30, 30),
@@ -82,12 +82,12 @@ theme_ta <- function (
         , face = "bold.italic"
       )
       , legend.title = element_text (
-        size = rel(0.5)
+        size = base_size + 8
         ,  color = "black"
         , face = "bold.italic"
       )
       , legend.text = element_text (
-          size = rel(0.3)
+          size = base_size
           ,  color = "black"
           , face = "bold.italic"
         )
