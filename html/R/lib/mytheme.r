@@ -57,7 +57,7 @@ theme_ta <- function (
           , color = "black"
           , face = "bold.italic"
         )
-        , legend.position = 'bottom'
+      , legend.position = 'bottom'
       , axis.title = element_text(
           size = axis_title_size )
       , axis.text = element_text(

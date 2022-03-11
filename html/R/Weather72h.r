@@ -61,13 +61,28 @@ T_Date <- function( Datum , intercept, slope) {
   
 }
 
+windvector <- function ( d, v ) {
+  
+  x <- sin(d) * v
+  y <- cos(d) * v 
+  w <- data.table(
+    x = x
+    , y = y
+  )
+  return (w)
+  
+}
+
 SQL <- paste( 
     'select dateutc as Zeit, Fahrenheit_Celsius(tempf) as temperature'
   , ', Barom_in2hPa(baromin) as rel_air_pressure'
   , ', Barom_in2hPa(absbaromin) as abs_air_pressure'
+  , ', winddir'
+  , ', mph_ms(windspeedmph) as windspeed'
   , ', solarradiation'
   , ' from reports where dateutc > date(SUBDATE(now(), INTERVAL 72 HOUR)) ;'
 )
+
 daten <- RunSQL(SQL)
 
 today <- Sys.Date()
@@ -154,6 +169,99 @@ daten %>% ggplot() +
 
 ggsave(  paste( 
   file = '../png/solarradiation_72h.svg', sep='')
+  , plot = P
+  , device = 'svg'
+  , bg = "white"
+  , width = 1920
+  , height = 1080
+  , units = "px"
+  , dpi = 72
+)
+
+daten %>% ggplot() + 
+  geom_point( aes( x = Zeit, y = windspeed, colour = 'Geschwindigkeit' ), size = 1 ) +
+  geom_smooth( aes( x = Zeit, y = windspeed, colour = 'Geschwindigkeit' ), size = 1 ) +
+  
+  scale_x_datetime( ) + # breaks = '1 hour' ) + 
+  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  scale_fill_viridis(discrete = TRUE) +
+  theme_ta() +
+  theme(  legend.position="right"
+          , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+  ) +
+  labs(  title = paste( 'Windgeschwindigkeit Rheinbach' )
+         , subtitle = 'Letzte 4 Tage'
+         , x = "Datum/Zeit"
+         , y = "Geschwindigkeit [m/s]"
+         , colour = 'Legende'
+         , caption = paste( "Stand:", heute )
+  ) -> P
+
+ggsave(  paste( 
+  file = '../png/windspeed_72h.svg', sep='')
+  , plot = P
+  , device = 'svg'
+  , bg = "white"
+  , width = 1920
+  , height = 1080
+  , units = "px"
+  , dpi = 72
+)
+
+daten %>% ggplot() + 
+  geom_point( aes( x = Zeit, y = winddir, colour = 'Richtung' ), size = 1 ) +
+
+  scale_x_datetime( ) + # breaks = '1 hour' ) + 
+  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  scale_fill_viridis(discrete = TRUE) +
+  expand_limits( y = 0 ) +
+  expand_limits( y = 360 ) +
+  
+  theme_ta() +
+  theme(  legend.position="right"
+          , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+  ) +
+  labs(  title = paste( 'Windrichtung Rheinbach' )
+         , subtitle = 'Letzte 4 Tage'
+         , x = "Datum/Zeit"
+         , y = "Richtung [°]"
+         , colour = 'Legende'
+         , caption = paste( "Stand:", heute )
+  ) -> P
+
+ggsave(  paste( 
+  file = '../png/winddir_72h.svg', sep='')
+  , plot = P
+  , device = 'svg'
+  , bg = "white"
+  , width = 1920
+  , height = 1080
+  , units = "px"
+  , dpi = 72
+)
+
+wind <-windvector(daten$winddir,daten$windspeed)
+
+
+wind %>% ggplot() + 
+  geom_point( aes( x = x, y = y, colour = 'Richtung' ), alpha = 0.5, size = 1 ) +
+  scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  scale_fill_viridis(discrete = TRUE) +
+  theme_ta() +
+  theme(  legend.position="right"
+          , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+  ) +
+  labs(  title = paste( 'Windrichtung und -stärke Rheinbach' )
+         , subtitle = 'Letzte 4 Tage'
+         , x = "x [m/s]"
+         , y = "y [m/s]"
+         , colour = 'Legende'
+         , caption = paste( "Stand:", heute )
+  ) -> P
+
+ggsave(  paste( 
+  file = '../png/wind_72h.svg', sep='')
   , plot = P
   , device = 'svg'
   , bg = "white"

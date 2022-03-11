@@ -8,7 +8,7 @@
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <- "TempCYearMaxMin"
+MyScriptName <- "SunDeclination"
 
 options(OutDec=',')
 
@@ -57,34 +57,25 @@ source("lib/sql.r")
 
 MyPos <- list( lat = 50.620941424520026, long = 6.961696767218697)
 
-T_Date <- function( Datum , intercept, slope) {
+e = 23.43639 / 180 * pi # Neigung der Ekliptik 
+
+Deklination <- function( x ) {
+
+  T = as.numeric(x - as.Date("2021-01-01"))
   
-  return (intercept + slope * cospi( as.numeric(Datum - as.Date("2021-07-20"))/182.5))
+  return ( e * sin(0.016906*(T-81.086)) * 180 / pi  + (90 - MyPos$lat) )
   
 }
 
-SQL <- 'select date(dateutc) as Datum, Fahrenheit_Celsius(max(tempf)) as maxT, Fahrenheit_Celsius(min(tempf)) as minT from reports group by Datum;'
-daten <- RunSQL(SQL)
-
-today <- Sys.Date()
-heute <- format(today, "%Y%m%d")
-
-ra1 <- lm( maxT ~ cospi( as.numeric(Datum - as.Date("2021-07-20"))/182.5), data = daten)
-ci1 <- confint(ra1, CI=0.95)
-
-ra2 <- lm( minT ~ cospi( as.numeric(Datum - as.Date("2021-07-20"))/182.5), data = daten)
-ci2 <- confint(ra2, CI=0.95)
-
-daten %>% ggplot() + 
-  geom_smooth( aes( x = Datum, y = maxT, colour = 'Max' ), size = 1 ) +
-  geom_smooth( aes( x = Datum, y = minT, colour = 'Min' ), size = 1 ) +
+daten <- data.table(
   
-  geom_point( aes( x = Datum, y = maxT, colour = 'Max' ), size = 5 ) +
-  geom_point( aes( x = Datum, y = minT, colour = 'Min' ), size = 5 ) +
+  Datum = seq(from=as.Date("2022-01-01"), to=as.Date("2022-12-31"), by = 1 )
   
-  geom_function( fun = T_Date, args = list (intercept = ra1$coefficients[1], slope = ra1$coefficients[2]), size = 2) +
-  geom_function( fun = T_Date, args = list (intercept = ra2$coefficients[1], slope = ra2$coefficients[2]), size = 2) +
+)
 
+daten %>% ggplot( aes(x = Datum) ) + 
+  geom_function( fun = Deklination, size = 2) +
+  
   scale_x_date( breaks = '1 month', date_labels = "%b %Y" ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
@@ -92,10 +83,10 @@ daten %>% ggplot() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
-  labs(  title = paste( 'Temperaturen Rheinbach' )
-         , subtitle = 'Minimale / Maximale Temperatur des Tages'
+  labs(  title = paste( 'Höhe der Sonne Rheinbach' )
+         , subtitle = 'Höhe zur Mittagszeit'
          , x = "Datum"
-         , y = "Temperatur [°C]"
+         , y = "Winkel [°]"
          , colour = 'Tagestemperatur'
          , caption = paste( "Stand:", heute )
   ) -> P

@@ -20,8 +20,8 @@ begin
             from ( 
                 select 
                     date(dateutc) as Tag
-                    , avg(sin(winddir/180*pi())*windspeedmph) as x
-                    , avg( cos( winddir / 180 * pi() ) * windspeedmph) as y
+                    , avg( sin( winddir / 180 * pi() ) * windspeedmph ) as x
+                    , avg( cos( winddir / 180 * pi() ) * windspeedmph ) as y
                 from reports
                 group by 
                     date(dateutc)
@@ -91,7 +91,7 @@ drop function if exists mph_ms //
 create function mph_ms ( speed FLOAT ) returns FLOAT
 
 begin
-	return round( speed * 1609.344 / 3600 , 1 )  ;
+	return round( speed * 1609.344 / 3600 , 3)  ;
 end
 //
 
