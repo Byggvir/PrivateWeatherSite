@@ -77,7 +77,10 @@ $strstationmap = array (
 
     // Execute the R script within PHP code
     // Generates output as test.png image.
-     exec("R/Weather72h.r");
+    // Moved to cron job
+    // exec("R/Weather72h.r");
+    
+    
 ?>
     <div id="r-output" style="width: 100%; padding: 25px;">
     <img style="width: 960px; padding: 25px;" src="png/temperature_72h.svg" alt="R Graph" />
