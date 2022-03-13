@@ -80,6 +80,7 @@ SQL <- paste(
   , ', winddir'
   , ', mph_ms(windspeedmph) as windspeed'
   , ', solarradiation'
+  , ', UV'
   , ' from reports where dateutc > date(SUBDATE(now(), INTERVAL 72 HOUR)) ;'
 )
 
@@ -148,12 +149,19 @@ ggsave(  paste(
   , dpi = 72
 )
 
+UVmax = max(c(daten$UVi,10))
+SRmax = max(c(daten$solarradiation,1000))
+
+scl = ( UVmax / SRmax )
 
 daten %>% ggplot() + 
   geom_line( aes( x = Zeit, y = solarradiation, colour = 'Leistung' ), size = 1 ) +
-
+  geom_line( aes( x = Zeit, y = UV / scl, colour = 'UV Index' ), size = 1 ) +
+  
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
-  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ),
+                      sec.axis = sec_axis( ~.* scl, name = "UV Index"
+                                           , labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ))) +
   scale_fill_viridis(discrete = TRUE) +
   theme_ta() +
   theme(  legend.position="right"
