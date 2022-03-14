@@ -663,8 +663,8 @@
 <rect x='1654.21' y='536.37' width='17.28' height='22.73' style='stroke-width: 0.75; stroke: none; fill: #999999; fill-opacity: 0.40;' />
 <line x1='1655.94' y1='547.73' x2='1669.76' y2='547.73' style='stroke-width: 2.13; stroke: #F8766D; stroke-linecap: butt;' />
 <text x='1687.43' y='556.48' style='font-size: 24.00px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='190.73px' lengthAdjust='spacingAndGlyphs'>Geschwindigkeit</text>
-<text x='853.62' y='97.14' text-anchor='middle' style='font-size: 26.00px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='482.67px' lengthAdjust='spacingAndGlyphs'>Letzte 4 Tage - Stand: 2022-03-14 16:04</text>
-<text x='853.62' y='70.11' text-anchor='middle' style='font-size: 48.00px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='749.45px' lengthAdjust='spacingAndGlyphs'>Windgeschwindigkeit Rheinbach</text>
+<text x='853.62' y='97.14' text-anchor='middle' style='font-size: 26.00px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='482.67px' lengthAdjust='spacingAndGlyphs'>Letzte 4 Tage - Stand: 2022-03-14 16:20</text>
+<text x='853.62' y='70.11' text-anchor='middle' style='font-size: 48.00px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='730.78px' lengthAdjust='spacingAndGlyphs'>Windgeschwindigkeit Mittelerde</text>
 <text x='853.62' y='1049.59' text-anchor='middle' style='font-size: 4.80px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='37.56px' lengthAdjust='spacingAndGlyphs'>Stand: 20220314</text>
 </g>
 </svg>

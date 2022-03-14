@@ -18,6 +18,8 @@ CREATE TABLE `stations` (
   `token` char(64) DEFAULT NULL,
   `name` char(64) DEFAULT NULL,
   `softwaretype` char(64) DEFAULT NULL,
+  `location_lat` double DEFAULT NULL,
+  `location_long` double DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

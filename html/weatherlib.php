@@ -57,5 +57,36 @@ function WeatherReport () {
 
 } /* End of WeaterReport */
 
+function StationList () {
+   
+  global $mysqli;
+ 
+  $SQL="SELECT * FROM stations;";
+  
+  if ($reports = $mysqli->query($SQL)) {
+    echo "<table>" ;
+    echo "<tr><th>Id</th><th>Name</th><th>Software</th><th>Latitude</th><th>Longitude</th></tr>\n" ;
+    
+    while ($result = $reports->fetch_assoc()) {
+
+      echo "<tr>\n";
+      echo "<td>" . $result["id"] . "</td>\n" ;
+      echo "<td>" . $result["name"] . "</td>\n" ;
+      echo "<td>" . $result["softwaretype"] . "</td>\n" ;
+      echo "<td>" . $result["location_lat"] . "</td>\n" ;
+      echo "<td>" . $result["location_long"] . "</td>\n" ;
+      echo "</tr>\n";
+ 
+        
+    }/* end while */
+    echo "</table>\n" ;
+
+    $reports->close();
+    
+  } /* end if */
+
+} /* End of StationList */
+
+
 
 ?>

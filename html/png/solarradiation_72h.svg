@@ -80,8 +80,8 @@
 <line x1='1743.96' y1='559.10' x2='1757.79' y2='559.10' style='stroke-width: 2.13; stroke: #00BFC4; stroke-linecap: butt;' />
 <text x='1775.46' y='545.11' style='font-size: 24.00px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='100.02px' lengthAdjust='spacingAndGlyphs'>Leistung</text>
 <text x='1775.46' y='567.84' style='font-size: 24.00px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='102.70px' lengthAdjust='spacingAndGlyphs'>UV Index</text>
-<text x='868.13' y='97.14' text-anchor='middle' style='font-size: 26.00px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='482.67px' lengthAdjust='spacingAndGlyphs'>Letzte 4 Tage - Stand: 2022-03-14 16:04</text>
-<text x='868.13' y='70.11' text-anchor='middle' style='font-size: 48.00px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='722.76px' lengthAdjust='spacingAndGlyphs'>Sonneneinstrahlung Rheinbach</text>
+<text x='868.13' y='97.14' text-anchor='middle' style='font-size: 26.00px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='482.67px' lengthAdjust='spacingAndGlyphs'>Letzte 4 Tage - Stand: 2022-03-14 16:20</text>
+<text x='868.13' y='70.11' text-anchor='middle' style='font-size: 48.00px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='704.09px' lengthAdjust='spacingAndGlyphs'>Sonneneinstrahlung Mittelerde</text>
 <text x='868.13' y='1049.59' text-anchor='middle' style='font-size: 4.80px; font-weight: bold; font-style: italic; font-family: "Nimbus Sans";' textLength='37.56px' lengthAdjust='spacingAndGlyphs'>Stand: 20220314</text>
 </g>
 </svg>
