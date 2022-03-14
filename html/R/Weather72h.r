@@ -75,6 +75,10 @@ windvector <- function ( d, v ) {
   
 }
 
+SQL <- 'select * from stations where id = 1;'
+
+Stations <- RunSQL(SQL)
+
 SQL <- paste( 
     'select dateutc as Zeit, Fahrenheit_Celsius(tempf) as temperature'
   , ', Barom_in2hPa(baromin) as rel_air_pressure'
@@ -83,7 +87,9 @@ SQL <- paste(
   , ', mph_ms(windspeedmph) as windspeed'
   , ', solarradiation'
   , ', UV'
-  , ' from reports where dateutc > date(SUBDATE(now(), INTERVAL 72 HOUR)) ;'
+  , ' from reports '
+  , ' where id = 1 and '
+  , ' dateutc > date(SUBDATE(now(), INTERVAL 72 HOUR)) ;'
 )
 
 daten <- RunSQL(SQL)
@@ -96,7 +102,6 @@ maxT <- max(daten$temperature)
 
 daten %>% ggplot() + 
   geom_line( aes( x = Zeit, y = temperature, colour = 'Temperatur' ), size = 1 ) +
-  geom_textbox( aes( x = minZ, y = maxT, label = format(Sys.time(), "%Y-%m-%d %H:%M" ))) +
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
@@ -105,7 +110,7 @@ daten %>% ggplot() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
           ) +
-  labs(  title = paste( 'Temperaturen Rheinbach' )
+  labs(  title = paste( 'Temperaturen', Stations$name[1] )
          , subtitle = paste('Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "Datum/Zeit"
          , y = "Temperatur [°C]"
@@ -135,7 +140,7 @@ daten %>% ggplot() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
-  labs(  title = paste( 'Luftdruck Rheinbach' )
+  labs(  title = paste( 'Luftdruck', Stations$name[1] )
          , subtitle = paste('Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "Datum/Zeit"
          , y = "Luftdruck [hPa]"
@@ -172,7 +177,7 @@ daten %>% ggplot() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
-  labs(  title = paste( 'Sonneneinstrahlung Rheinbach' )
+  labs(  title = paste( 'Sonneneinstrahlung', Stations$name[1] )
          , subtitle = paste( 'Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "Datum/Zeit"
          , y = "Leistung [W/m²]"
@@ -202,7 +207,7 @@ daten %>% ggplot() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
-  labs(  title = paste( 'Windgeschwindigkeit Rheinbach' )
+  labs(  title = paste( 'Windgeschwindigkeit', Stations$name[1] )
          , subtitle = paste( 'Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "Datum/Zeit"
          , y = "Geschwindigkeit [m/s]"
@@ -234,7 +239,7 @@ daten %>% ggplot() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
-  labs(  title = paste( 'Windrichtung Rheinbach' )
+  labs(  title = paste( 'Windrichtung', Stations$name[1] )
          , subtitle = paste( 'Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "Datum/Zeit"
          , y = "Richtung [°]"
@@ -265,7 +270,7 @@ wind %>% ggplot() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
-  labs(  title = paste( 'Windrichtung und -stärke Rheinbach' )
+  labs(  title = paste( 'Windrichtung und -stärke', Stations$name[1] )
          , subtitle = paste( 'Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "x [m/s]"
          , y = "y [m/s]"
