@@ -20,6 +20,8 @@ library(gridExtra)
 library(gtable)
 library(lubridate)
 library(ggplot2)
+library(ggtext)
+
 library(viridis)
 library(hrbrthemes)
 library(scales)
@@ -89,19 +91,22 @@ daten <- RunSQL(SQL)
 today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
+minZ <- min(daten$Zeit)
+maxT <- max(daten$temperature)
+
 daten %>% ggplot() + 
   geom_line( aes( x = Zeit, y = temperature, colour = 'Temperatur' ), size = 1 ) +
-
+  geom_textbox( aes( x = minZ, y = maxT, label = format(Sys.time(), "%Y-%m-%d %H:%M" ))) +
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
-
+  
   theme_ta() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
           ) +
   labs(  title = paste( 'Temperaturen Rheinbach' )
-         , subtitle = 'Letzte 4 Tage'
+         , subtitle = paste('Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "Datum/Zeit"
          , y = "Temperatur [°C]"
          , colour = 'Legende'
@@ -131,7 +136,7 @@ daten %>% ggplot() +
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
   labs(  title = paste( 'Luftdruck Rheinbach' )
-         , subtitle = 'Letzte 4 Tage'
+         , subtitle = paste('Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "Datum/Zeit"
          , y = "Luftdruck [hPa]"
          , colour = 'Legende'
@@ -168,7 +173,7 @@ daten %>% ggplot() +
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
   labs(  title = paste( 'Sonneneinstrahlung Rheinbach' )
-         , subtitle = 'Letzte 4 Tage'
+         , subtitle = paste( 'Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "Datum/Zeit"
          , y = "Leistung [W/m²]"
          , colour = 'Legende'
@@ -198,7 +203,7 @@ daten %>% ggplot() +
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
   labs(  title = paste( 'Windgeschwindigkeit Rheinbach' )
-         , subtitle = 'Letzte 4 Tage'
+         , subtitle = paste( 'Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "Datum/Zeit"
          , y = "Geschwindigkeit [m/s]"
          , colour = 'Legende'
@@ -230,7 +235,7 @@ daten %>% ggplot() +
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
   labs(  title = paste( 'Windrichtung Rheinbach' )
-         , subtitle = 'Letzte 4 Tage'
+         , subtitle = paste( 'Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "Datum/Zeit"
          , y = "Richtung [°]"
          , colour = 'Legende'
@@ -261,7 +266,7 @@ wind %>% ggplot() +
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
   labs(  title = paste( 'Windrichtung und -stärke Rheinbach' )
-         , subtitle = 'Letzte 4 Tage'
+         , subtitle = paste( 'Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "x [m/s]"
          , y = "y [m/s]"
          , colour = 'Legende'
