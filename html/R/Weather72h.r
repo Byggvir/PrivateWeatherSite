@@ -20,8 +20,6 @@ library(gridExtra)
 library(gtable)
 library(lubridate)
 library(ggplot2)
-library(ggtext)
-
 library(viridis)
 library(hrbrthemes)
 library(scales)
@@ -88,8 +86,8 @@ SQL <- paste(
   , ', solarradiation'
   , ', UV'
   , ' from reports '
-  , ' where id = 1 and '
-  , ' dateutc > date(SUBDATE(now(), INTERVAL 72 HOUR)) ;'
+  , ' where id = 1 '
+  , ' and dateutc > date(SUBDATE(now(), INTERVAL 72 HOUR)) ;'
 )
 
 daten <- RunSQL(SQL)
@@ -102,7 +100,7 @@ maxT <- max(daten$temperature)
 
 daten %>% ggplot() + 
   geom_line( aes( x = Zeit, y = temperature, colour = 'Temperatur' ), size = 1 ) +
-  scale_x_datetime( ) + # breaks = '1 hour' ) + 
+  # scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
   

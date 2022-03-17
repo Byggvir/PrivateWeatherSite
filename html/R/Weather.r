@@ -99,13 +99,14 @@ daten %>% ggplot() +
   ) -> P
 
 ggsave(  paste( 
-  file = '../png/', MyScriptName, '_T.png', sep='')
+  file = '../png/', MyScriptName, '_T.svg', sep='')
   , plot = P
-  , device = 'png'
+  , device = 'svg'
   , bg = "white"
-  , width = 1920 * 2
-  , height = 1080 * 2
+  , width = 1920
+  , height = 1080
   , units = "px"
+  , dpi = 72
 )
 
 daten %>% ggplot() + 
@@ -130,13 +131,14 @@ daten %>% ggplot() +
   ) -> P2
 
 ggsave(  paste( 
-  file = '../png/', MyScriptName, '_S.png', sep='')
+  file = '../png/', MyScriptName, '_S.svg', sep='')
   , plot = P2
-  , device = 'png'
+  , device = 'svg'
   , bg = "white"
-  , width = 1920 * 2
-  , height = 1080 * 2
+  , width = 1920
+  , height = 1080
   , units = "px"
+  , dpi = 72
 )
 
 ra <- lm( maxT ~ minT, data = daten)
@@ -164,14 +166,15 @@ daten %>% ggplot() +
          , subtitle = 'Maximale Temperatur des Tages nach Jahreszeit'
          , x = "cos(t)"
          , y = "maximale Temperatur [°C]"
-  ) -> P2
+  ) -> P3
 
 ggsave(  paste( 
-  file = '../png/', MyScriptName, '_Sin.png', sep='')
-  , plot = P2
-  , device = 'png'
+  file = '../png/', MyScriptName, '_Sin.svg', sep='')
+  , plot = P3
+  , device = 'svg'
   , bg = "white"
   , width = 1920
   , height = 1080
   , units = "px"
+  , dpi = 72
 )

@@ -1,6 +1,6 @@
 <?php
 /**
- * index.php
+ * stations.php
  *
  * @package default
  */
@@ -10,44 +10,6 @@ define('ABSPATH', 'Weather');
 include_once 'weatherdb.php';
 include_once 'weathersqllib.php';
 include_once 'weatherlib.php';
-
-$datefields = array (
-
-    'dateutc'
-);
-
-$floatsensormap = array (
-
-  'absbaromin'
-, 'baromin'
-, 'dailyrainin'
-, 'dateutc'
-, 'dewptf'
-, 'humidity'
-, 'indoorhumidity'
-, 'indoortempf'
-, 'monthlyrainin'
-, 'rainin'
-, 'solarradiation'
-, 'tempf'
-, 'weeklyrainin'
-, 'windchillf'
-, 'winddir'
-, 'windgustmph'
-, 'windspeedmph'
-, 'yearlyrainin'
-, 'UV'
-) ;
-
-$strsensormap = array (
-      'softwaretype' => 'softwaretype'
-	, 'weather' => 'weather'
-);
-
-
-$strstationmap = array (
-      'softwaretype' => 'softwaretype'
-);
 
 ?>
 <html>
@@ -75,7 +37,6 @@ $strstationmap = array (
 
     $mysqli->close();
 
-    
 ?>
 
 </body>

@@ -1,15 +1,27 @@
 @charset UTF-8;
 /*
-Styles for ta_speedreport 
+Styles for WeatherStations 
 
 Author: Thomas Arend
-Date: 29.07.2018
+Date: 15.03.2022
 Version 0.1.0
 */
+
+.page-header {
+    display: flex;
+    flex-direction: column;
+}
+
+@media all and (min-width: 40em) {
+.page-header {
+    flex-direction: row;
+  }
+}
 
 table {
   font-family: monospace;
   border : 2px solid blue;
+  min-width: 600px;
   
 }
 tr:nth-of-type(even) td {
@@ -23,123 +35,45 @@ td {
   margin: 0.3em
   
 }
-.verybig {
-   font-size : 1em;
 
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%
+    height: 100%;
 }
 
-.parameter {
-
-    background : lightgray ;
-
+ 
+.chart {
+    min-width: 500px;
+    min-height: 300px;
+    align-content: center;
+    border: 1px solid;
+	margin: .1em;
+	padding: .5em;
+	background: #fff;
 }
 
-.result {
-    text-align : center ;
+.chart:nth-of-type(odd) {
+	background: #eee;
+}
+
+.chart:nth-of-type(even) {
+	background: #ddd;
+}
+
+.diagram {
     
+    min-width: 480px;
+    min-height: 270px;
+    align-items: center;
+    justify-content: center;
 }
 
-.resultleft {
-    text-align : left ;
-    
+img {
+    object-fit: cover;
+    width: 480px;
+    height: 270px;
+    align-items: center;
+    justify-content: center;
 }
-
-.resultright {
-    text-align : right ;
-    
-}
-
-.rowsummary {
-    font-weight: bolder;
-    
-}
-
-.colstart {
-    text-align : center
-    
-}
-
-.colping {
-    width : 5em;
-    padding-left:0.5em;
-    padding-right:0.5em;
-    
-}
-
-.coldownload {
-    width : 5em;
-    padding-left:0.5em;
-    padding-right:0.5em;
-    
-}
-
-.colupload {
-    width : 5em;
-    padding-left:0.5em;
-    padding-right:0.5em;
-    
-}
-
-.colurl {
-    
-    width : 18em;
-    text-align: left;
-
-    
-}
-
-.coltransmitted {
-    
-}
-
-.colreceived
- {
-    
-}
-
-.collost {
-
-    color: red;
-
-
-}
-
-.colduration {
-    
-}
-
-.colminping {
-    width : 5em;
-    color : green;
-    padding-left:0.5em;
-    padding-right:0.5em;
-    
-}
-
-.colavgping {
-    width : 5em;
-    color : darkblue;
-    font-weight : bold;
-    padding-left:0.5em;
-    padding-right:0.5em;
-}
-
-.colmaxping {
-    width : 5em;
-    color : red;
-    padding-left:0.5em;
-    padding-right:0.5em;
-    
-}
-
-.colmdev {
-    width : 5em;
-    padding-left:0.5em;
-    padding-right:0.5em;
-    
-}
-
-.colpipe
- {
-     
- }

@@ -63,7 +63,15 @@ T_Date <- function( Datum , intercept, slope) {
   
 }
 
-SQL <- 'select date(dateutc) as Datum, Fahrenheit_Celsius(max(tempf)) as maxT, Fahrenheit_Celsius(min(tempf)) as minT from reports group by Datum;'
+SQL <- paste( 'select'
+              , 'date(dateutc) as Datum '
+              , ', Fahrenheit_Celsius(max(tempf)) as maxT'
+              , ', Fahrenheit_Celsius(min(tempf)) as minT'
+              , 'from reports'
+              , 'where id = 1 '
+              , 'and dateutc > date(SUBDATE(now(), INTERVAL 1 YEAR))'
+              , 'group by Datum ;'
+)
 daten <- RunSQL(SQL)
 
 today <- Sys.Date()
@@ -102,6 +110,36 @@ daten %>% ggplot() +
 
 ggsave(  paste( 
   file = '../png/', MyScriptName, '_T.svg', sep='')
+  , plot = P
+  , device = 'svg'
+  , bg = "white"
+  , width = 1920
+  , height = 1080
+  , units = "px"
+  , dpi = 72
+)
+
+daten %>% ggplot() + 
+  geom_point( aes( x = cospi( as.numeric(Datum - as.Date("2021-07-20"))/182.5), y = maxT, colour = 'Max' ), size = 5 ) +
+  geom_abline(intercept = ci1[1,1], slope = ci1[2,1]) +
+  geom_abline(intercept = ci1[1,2], slope = ci1[2,2]) +
+  scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  scale_fill_viridis(discrete = TRUE) +
+  theme_ta() +
+  theme(  legend.position="right"
+          , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+  ) +
+  labs(  title = paste( 'Temperaturen Rheinbach' )
+         , subtitle = 'Minimale / Maximale Temperatur des Tages'
+         , x = "Datum"
+         , y = "Temperatur [°C]"
+         , colour = 'Tagestemperatur'
+         , caption = paste( "Stand:", heute )
+  ) -> P
+
+ggsave(  paste( 
+  file = '../png/', MyScriptName, '_S.svg', sep='')
   , plot = P
   , device = 'svg'
   , bg = "white"

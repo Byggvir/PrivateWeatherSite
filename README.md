@@ -7,10 +7,10 @@ Collect data from weatherstations (in the local net) on a Raspberry Pi
 
 Private Wetterstationen können Daten an Wetterportale im Internet übertragen: Neben den Protalen
 
-  * ecowitt.net
-  * Wunderground
-  * Weathercloud
-  * WeatherObservationsWebsite
+  * [Ecowitt weather](https://www.ecowitt.net)
+  * [Weather Underground](https://WeatherUnderground.com)
+  * [WeatherCloud](https://weathercloud.net/)
+  * [WOW - Weather Observation Website](www.WeatherObservationWebsite.com)
 
 können die Daten an ein eingenes Portal gesendet werden.
 
@@ -22,6 +22,10 @@ Meine *dnt WeatherScreen Pro* unterstütz dazu zwei Protokolle:
   * Wunderground
 
 Mein privates Wetterprotal im Heimnatz ist über DynDNS unter [weather.dyn.byggvir.de](https://weather.dyn.byggvir.de) erreichbar.
+
+In diesem Git wird das Protokoll von Wunderground verwendet.
+
+Die Meldungen der Wetterstation nimmt die Website über das Script update.php entgegen. Meine dnt Weatherstation Pro berichtet nicht alle im Protokoll möglichen Parameter. Ich habe dennoch alle Parameter in der  Tabelle *reports* definiert, so dass eine anderer Wetterstation, die mehr Daten berichtet, bebenso genutzt werden kann.
 
 ## Requirements
 

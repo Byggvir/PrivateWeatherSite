@@ -66,8 +66,9 @@ $strstationmap = array (
 </head>
 
 <body>
-
+<div id="header" class="page-header">
     <h1>Wetterstation</h1>
+</div>
 
 <?php
 
@@ -82,22 +83,41 @@ $strstationmap = array (
     
     
 ?>
-    <div id="r-output1" style="width: 100%; padding: 25px;">
-    <img style="width: 960px; padding: 25px;" src="png/temperature_72h.svg" alt="R Graph" />
+
+<main class="container">
+
+<section class="chart">
+    <div id="r-output1" class="diagram" >
+    <img src="png/temperature_72h.svg" alt="R Graph" />
     </div>
-    <div id="r-output2" style="width: 100%; padding: 25px;">
-    <img style="width: 960px; padding: 25px;" src="png/air_pressure_72h.svg" alt="R Graph" />
+</section>
+
+<section class="chart">
+    <div id="r-output2" class="diagram" >
+    <img src="png/air_pressure_72h.svg" alt="R Graph" />
     </div>
-    <div id="r-output3" style="width: 100%; padding: 25px;">
-    <img style="width: 960px; padding: 25px;" src="png/winddir_72h.svg" alt="R Graph" />
+</section>
+
+<section class="chart">
+    <div id="r-output3" class="diagram" >
+    <img src="png/winddir_72h.svg" alt="R Graph" />
     </div>
-    <div id="r-output4" style="width: 100%; padding: 25px;">
-    <img style="width: 960px; padding: 25px;" src="png/windspeed_72h.svg" alt="R Graph" />
+</section>
+
+<section class="chart">
+    <div id="r-output4" class="diagram">
+    <img src="png/windspeed_72h.svg" alt="R Graph" />
     </div>
-    <div id="r-output5" style="width: 100%; padding: 25px;">
-    <img style="width: 960px; padding: 25px;" src="png/solarradiation_72h.svg" alt="R Graph" />
+</section>
+
+<section class="chart">
+    <div id="r-output5" class="diagram">
+    <img src="png/solarradiation_72h.svg" alt="R Graph" />
     </div>
-    
+</section>
+
+</main>
+
     <script>        
         // Use an off-screen image to load the next frame.
         var img = new Image();

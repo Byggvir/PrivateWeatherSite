@@ -103,6 +103,7 @@ ggsave(  paste(
   , width = 1920
   , height = 1080
   , units = "px"
+  , dpi = 72
 )
 
 daten %>% ggplot() + 
@@ -135,6 +136,7 @@ ggsave(  paste(
   , width = 1920
   , height = 1080
   , units = "px"
+  , dpi = 72
 )
 
 
@@ -167,4 +169,5 @@ ggsave(  paste(
   , width = 1920
   , height = 1080
   , units = "px"
+  , dpi = 72
 )
