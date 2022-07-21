@@ -69,7 +69,7 @@ SQL <- paste( 'select'
               , ', Fahrenheit_Celsius(min(tempf)) as minT'
               , 'from reports'
               , 'where id = 1 '
-              , 'and dateutc > date(SUBDATE(now(), INTERVAL 1 YEAR))'
+#              , 'and dateutc > date(SUBDATE(now(), INTERVAL 1 YEAR))'
               , 'group by Datum ;'
 )
 daten <- RunSQL(SQL)

@@ -85,6 +85,7 @@ SQL <- paste(
   , ', mph_ms(windspeedmph) as windspeed'
   , ', solarradiation'
   , ', UV'
+  , ', humidity'
   , ' from reports '
   , ' where id = 1 '
   , ' and dateutc > date(SUBDATE(now(), INTERVAL 72 HOUR)) ;'
@@ -118,6 +119,35 @@ daten %>% ggplot() +
 
 ggsave(  paste( 
   file = '../png/temperature_72h.svg', sep='')
+  , plot = P
+  , device = 'svg'
+  , bg = "white"
+  , width = 1920
+  , height = 1080
+  , units = "px"
+  , dpi = 72
+)
+
+daten %>% ggplot() + 
+  geom_line( aes( x = Zeit, y = humidity, colour = 'Luftfeuchte' ), size = 1 ) +
+  # scale_x_datetime( ) + # breaks = '1 hour' ) + 
+  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  scale_fill_viridis(discrete = TRUE) +
+  
+  theme_ta() +
+  theme(  legend.position="right"
+          , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+  ) +
+  labs(  title = paste( 'Luftfeuchte', Stations$name[1] )
+         , subtitle = paste('Letzte 4 Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
+         , x = "Datum/Zeit"
+         , y = "Luftfeuchte [%]"
+         , colour = 'Legende'
+         , caption = paste( "Stand:", heute )
+  ) -> P
+
+ggsave(  paste( 
+  file = '../png/humidity_72h.svg', sep='')
   , plot = P
   , device = 'svg'
   , bg = "white"

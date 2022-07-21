@@ -94,24 +94,30 @@ $strstationmap = array (
 
 <section class="chart">
     <div id="r-output2" class="diagram" >
-    <img src="png/air_pressure_72h.svg" alt="R Graph" />
+    <img src="png/humidity_72h.svg" alt="R Graph" />
     </div>
 </section>
 
 <section class="chart">
     <div id="r-output3" class="diagram" >
+    <img src="png/air_pressure_72h.svg" alt="R Graph" />
+    </div>
+</section>
+
+<section class="chart">
+    <div id="r-output4" class="diagram" >
     <img src="png/winddir_72h.svg" alt="R Graph" />
     </div>
 </section>
 
 <section class="chart">
-    <div id="r-output4" class="diagram">
+    <div id="r-output5" class="diagram">
     <img src="png/windspeed_72h.svg" alt="R Graph" />
     </div>
 </section>
 
 <section class="chart">
-    <div id="r-output5" class="diagram">
+    <div id="r-output6" class="diagram">
     <img src="png/solarradiation_72h.svg" alt="R Graph" />
     </div>
 </section>
