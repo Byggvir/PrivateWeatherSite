@@ -14,7 +14,6 @@ options(OutDec=',')
 
 require(data.table)
 library(tidyverse)
-library(REST)
 library(grid)
 library(gridExtra)
 library(gtable)
@@ -79,7 +78,7 @@ today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
 daten %>% ggplot() + 
-  geom_point( aes( x = Temperature, y = Humidity ), size = 1 ) +
+  geom_point( aes( x = Temperature, y = Humidity ), size = 1 , alpha = 0.05) +
   scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   # scale_fill_viridis(discrete = TRUE) +
@@ -109,7 +108,7 @@ ggsave(  paste(
 daten$AbsHumidity <- SaettigungWasser(daten$Temperatur+273.15) * daten$Humidity / 100
 
 daten %>% ggplot() + 
-  geom_point( aes( x = Temperature, y = AbsHumidity ), size = 1 ) +
+  geom_point( aes( x = Temperature, y = AbsHumidity ), size = 1, alpha = 0.05 ) +
   scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   # scale_fill_viridis(discrete = TRUE) +

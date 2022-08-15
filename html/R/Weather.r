@@ -14,7 +14,6 @@ options(OutDec=',')
 
 require(data.table)
 library(tidyverse)
-library(REST)
 library(grid)
 library(gridExtra)
 library(gtable)

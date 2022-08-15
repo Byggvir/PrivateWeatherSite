@@ -14,7 +14,6 @@ options(OutDec=',')
 
 require(data.table)
 library(tidyverse)
-library(REST)
 library(grid)
 library(gridExtra)
 library(gtable)
@@ -65,6 +64,7 @@ T_Date <- function( Datum , intercept, slope) {
 
 SQL <- paste( 'select'
               , 'date(dateutc) as Datum '
+              , ', year(dateutc) as Jahr '
               , ', Fahrenheit_Celsius(max(tempf)) as maxT'
               , ', Fahrenheit_Celsius(min(tempf)) as minT'
               , 'from reports'
@@ -87,16 +87,18 @@ daten %>% ggplot() +
   geom_smooth( aes( x = Datum, y = maxT, colour = 'Max' ), size = 1 ) +
   geom_smooth( aes( x = Datum, y = minT, colour = 'Min' ), size = 1 ) +
   
-  geom_point( aes( x = Datum, y = maxT, colour = 'Max' ), size = 5 ) +
-  geom_point( aes( x = Datum, y = minT, colour = 'Min' ), size = 5 ) +
+  geom_point( aes( x = Datum, y = maxT, colour = 'Max' ), size = 1 ) +
+  geom_point( aes( x = Datum, y = minT, colour = 'Min' ), size = 1 ) +
   
   geom_function( fun = T_Date, args = list (intercept = ra1$coefficients[1], slope = ra1$coefficients[2]), size = 2) +
   geom_function( fun = T_Date, args = list (intercept = ra2$coefficients[1], slope = ra2$coefficients[2]), size = 2) +
-
+  # facet_wrap(vars(Jahr)) +
+  
   scale_x_date( breaks = '1 month', date_labels = "%b %Y" ) + 
+  # scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
-  theme_ta() +
+  theme_ipsum() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
@@ -109,14 +111,14 @@ daten %>% ggplot() +
   ) -> P
 
 ggsave(  paste( 
-  file = '../png/', MyScriptName, '_T.svg', sep='')
+  file = '../png/', MyScriptName, '_T.png', sep='')
   , plot = P
-  , device = 'svg'
+  , device = 'png'
   , bg = "white"
   , width = 1920
   , height = 1080
   , units = "px"
-  , dpi = 72
+  , dpi = 150
 )
 
 daten %>% ggplot() + 
@@ -126,7 +128,7 @@ daten %>% ggplot() +
   scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
-  theme_ta() +
+  theme_ipsum() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
@@ -136,15 +138,15 @@ daten %>% ggplot() +
          , y = "Temperatur [°C]"
          , colour = 'Tagestemperatur'
          , caption = paste( "Stand:", heute )
-  ) -> P
+  ) -> P2
 
 ggsave(  paste( 
-  file = '../png/', MyScriptName, '_S.svg', sep='')
-  , plot = P
-  , device = 'svg'
+  file = '../png/', MyScriptName, '_S.png', sep='')
+  , plot = P2
+  , device = 'png'
   , bg = "white"
   , width = 1920
   , height = 1080
   , units = "px"
-  , dpi = 72
+  , dpi = 150
 )

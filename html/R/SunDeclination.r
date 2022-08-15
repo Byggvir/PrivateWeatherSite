@@ -14,7 +14,6 @@ options(OutDec=',')
 
 require(data.table)
 library(tidyverse)
-library(REST)
 library(grid)
 library(gridExtra)
 library(gtable)
@@ -55,31 +54,35 @@ source("lib/myfunctions.r")
 source("lib/mytheme.r")
 source("lib/sql.r")
 
+today <- Sys.Date()
+heute <- format(today, "%Y%m%d")
+
 MyPos <- list( lat = 50.620941424520026, long = 6.961696767218697)
 
 e = 23.43639 / 180 * pi # Neigung der Ekliptik 
 
 Deklination <- function( x ) {
 
-  T = as.numeric(x - as.Date("2021-01-01"))
+  T = as.numeric(x - as.Date("2022-01-01"))
   
   return ( e * sin(0.016906*(T-81.086)) * 180 / pi  + (90 - MyPos$lat) )
   
 }
 
-daten <- data.table(
+SunDeclination <- data.table(
   
   Datum = seq(from=as.Date("2022-01-01"), to=as.Date("2022-12-31"), by = 1 )
   
 )
 
-daten %>% ggplot( aes(x = Datum) ) + 
-  geom_function( fun = Deklination, size = 2) +
-  
+SunDeclination$Winkel <- Deklination(SunDeclination$Datum)
+
+SunDeclination %>% ggplot( aes(x = Datum) ) + 
+  geom_function( fun = Deklination, size = 2, color = 'black' ) +
   scale_x_date( breaks = '1 month', date_labels = "%b %Y" ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
-  theme_ta() +
+  theme_ipsum() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
@@ -92,12 +95,12 @@ daten %>% ggplot( aes(x = Datum) ) +
   ) -> P
 
 ggsave(  paste( 
-  file = '../png/', MyScriptName, '_T.svg', sep='')
+  file = '../png/', MyScriptName, '_T.png', sep='')
   , plot = P
-  , device = 'svg'
+  , device = 'png'
   , bg = "white"
   , width = 1920
   , height = 1080
   , units = "px"
-  , dpi = 72
+  , dpi = 150
 )
