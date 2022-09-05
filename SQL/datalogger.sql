@@ -1,29 +1,3 @@
-use weatherstations;
-
-create table if not exists 
-datalogger ( 
-      logger int
-    , id bigint(20)
-    , dateutc datetime
-    , Temperature double
-    , Humidity double
-    , primary key (logger, dateutc)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-LOAD DATA LOCAL 
-INFILE '/tmp/EFG217104173.csv'      
-INTO TABLE datalogger
-FIELDS TERMINATED BY ','
-IGNORE 0 ROWS;
-
-LOAD DATA LOCAL 
-INFILE '/tmp/EL2005001039.csv'      
-INTO TABLE datalogger
-FIELDS TERMINATED BY ','
-IGNORE 0 ROWS;
-
-LOAD DATA LOCAL 
-INFILE '/tmp/EL2104003867.csv'      
-INTO TABLE datalogger
-FIELDS TERMINATED BY ','
-IGNORE 0 ROWS;
+version https://git-lfs.github.com/spec/v1
+oid sha256:893320dedefe304e158d13e12c2b1eafd1115f3d7b5a5dcb1d775240d22264f0
+size 599
