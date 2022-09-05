@@ -35,7 +35,7 @@ ExecSQL <- function (
   SQL 
 ) {
   
-  rmariadb.settingsfile <- "/etc/R/sql.conf.d/weatherstations.cnf"
+  rmariadb.settingsfile <- path.expand('~/R/sql.conf.d/weatherstations.conf')
   
   rmariadb.db <- "weatherstations"
   

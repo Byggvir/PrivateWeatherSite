@@ -1,7 +1,7 @@
 DROP DATABASE IF EXISTS `weatherstations`;
 CREATE DATABASE IF NOT EXISTS weatherstations;
 
-GRANT ALL ON weatherstations.* to 'weather'@'localhost' IDENTIFIED BY 'weather';
+GRANT ALL ON weatherstations.* to 'weather'@'localhost' IDENTIFIED BY 'big4ahTheici3see7goo1ooh';
 
 FLUSH PRIVILEGES;
 

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Prepare downloaded files for import into MariaDB / MySQL database weatherstations
+
+DEBUG=OFF
+
+# Color for output
+
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+blue=$(tput setaf 4)
+reset=$(tput sgr0)
+
+AWK="$(dirname $0)/awk"
+DAT="$(dirname $0)/../data"
+SED="$(dirname $0)/sed"
+SQL="$(dirname $0)/../SQL"
+TMP=$(mktemp -d)
+TMP=/tmp/
+
+for TABLE in EL2005001039 EL2104003867 EFG217104173
+do
+    #| awk -F ',' -f "${AWK}/${TABLE}.awk" \
+    cp $HOME/Cloud/Home/DataLogger/${TABLE}*.txt "${DAT}/${TABLE}.txt"
+    tr -d '\r' < "${DAT}/${TABLE}.txt" \
+    | sed -f "${SED}/${TABLE}.sed" \
+    > "${TMP}/${TABLE}.csv"
+
+done
