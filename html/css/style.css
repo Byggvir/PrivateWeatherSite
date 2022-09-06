@@ -3,8 +3,8 @@
 Styles for WeatherStations 
 
 Author: Thomas Arend
-Date: 15.03.2022
-Version 0.1.0
+Date: 06.09.2022
+Version 0.1.1
 */
 
 .page-header {
@@ -24,13 +24,20 @@ table {
   min-width: 600px;
   
 }
+
 tr:nth-of-type(even) td {
+
     background-color: #cccccc;
+
 }
+
 tr:nth-of-type(odd) td {
-    background-color: #ffffff;
+  
+  background-color: #ffffff;
 }
+
 td {
+  
   padding : 0.2em;
   margin: 0.3em
   
@@ -38,18 +45,22 @@ td {
 
 td.value {
     
-    text-align: right;
+    text-align: center;
     
 }
+
 .container {
+
     display: flex;
     flex-wrap: wrap;
     width: 100%
     height: 100%;
+
 }
 
  
 .chart {
+
     min-width: 660px;
     min-height: 380px;
     align-content: center;
@@ -57,14 +68,19 @@ td.value {
 	margin: .1em;
 	padding: .5em;
 	background: #fff;
+
 }
 
 .chart:nth-of-type(odd) {
+
 	background: #eee;
+
 }
 
 .chart:nth-of-type(even) {
+
 	background: #ddd;
+
 }
 
 .diagram {
@@ -76,9 +92,11 @@ td.value {
 }
 
 img {
+
     object-fit: cover;
     width: 660px;
     height: 360px;
     align-items: center;
     justify-content: center;
+
 }

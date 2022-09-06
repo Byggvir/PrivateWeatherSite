@@ -31,12 +31,14 @@ function CelsiusToFahrenheit( float $Celsius) : float {
 function WeatherReport () {
    
   global $mysqli;
- 
-  $SQL="SELECT dateutc, Fahrenheit_Celsius(tempf) as tempc, humidity, Barom_in2hPa(baromin) as baromhPa, Barom_in2hPa(absbaromin) as absbaromhPa, mph_ms(windspeedmph) as Windgeschwindigkeit, winddir as Windrichtung FROM reports order by dateutc desc limit 12;";
+
+  $sensor = 1;
+
+  $SQL="SELECT dateutc, format(Fahrenheit_Celsius(tempf),1) as tempc, humidity, format(Barom_in2hPa(baromin),1) as baromhPa, format(Barom_in2hPa(absbaromin),1) as absbaromhPa, round(mph_ms(windspeedmph),1) as Windgeschwindigkeit, winddir as Windrichtung , format(inch_mm(dailyrainin),1) as NiederschlagTag FROM reports where sensor = " . $sensor . " order by dateutc desc limit 60;";
   
   if ($reports = $mysqli->query($SQL)) {
     echo "<table>" ;
-    echo "<tr><th>Datum-Zeit [UTC]</th><th>Temperatur [°C]</th><th>Luftfeuchte [%]</th><th>Luftdruck [hPa]</th><th>Abs. Luftdruck [hPa]</th><th>Windrichtung</th><th>Windgeschwindigkeit [m/s]</th></tr>\n" ;
+    echo "<tr><th>Datum-Zeit [UTC]</th><th>Temperature<br />[°C]</th><th>Humindity<br />[%]</th><th>Air pressure<br />rel. / abs. [hPa]</th><th>Wind<br />[° , m/s]</th><th>Rain<br /> [mm/day]</th></tr>\n" ;
     
     while ($result = $reports->fetch_assoc()) {
 
@@ -44,10 +46,9 @@ function WeatherReport () {
       echo '<td>' . $result["dateutc"] . '</td>' . "\n" ;
       echo '<td class="value">' . $result["tempc"] . '</td>' . "\n" ;
       echo '<td class="value">' . $result["humidity"] . '</td>' . "\n" ;
-      echo '<td class="value">' . $result["baromhPa"] . '</td>' . "\n" ;
-      echo '<td class="value">' . $result["absbaromhPa"] . '</td>' . "\n" ;
-      echo '<td class="value">' . $result["Windrichtung"] . '</td>' . "\n" ;
-      echo '<td class="value">' . $result["Windgeschwindigkeit"] . '</td>' . "\n" ;
+      echo '<td class="value">' . $result["baromhPa"] . ' / ' . $result["absbaromhPa"] . '</td>' . "\n" ;
+      echo '<td class="value">' . $result["Windrichtung"] . ' - ' . $result["Windgeschwindigkeit"] . '</td>' . "\n" ;
+      echo '<td class="value">' . $result["NiederschlagTag"] . '</td>' . "\n" ;
       echo '</tr>' . "\n";
  
         
