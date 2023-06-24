@@ -23,9 +23,7 @@ library(viridis)
 library(hrbrthemes)
 library(scales)
 library(ragg)
-#library(extrafont)
-#extrafont::loadfonts()
-
+# 
 # Set Working directory to git root
 
 if (rstudioapi::isAvailable()){
@@ -75,8 +73,8 @@ ci2 <- confint(ra2, CI=0.95)
 
 daten %>% ggplot() + 
 
-  geom_smooth( aes( x = Datum, y = maxT, colour = 'Max' ) ) +
-  geom_smooth( aes( x = Datum, y = minT, colour = 'Min' ) ) +
+  geom_smooth( aes( x = Datum, y = maxT, colour = 'Max' ), method = 'loess', formula = y ~ x ) +
+  geom_smooth( aes( x = Datum, y = minT, colour = 'Min' ), method = 'loess', formula = y ~ x ) +
   
   geom_point( aes( x = Datum, y = maxT, colour = 'Max' ) ) +
   geom_point( aes( x = Datum, y = minT, colour = 'Min' ) ) +
@@ -115,7 +113,7 @@ ggsave(
 
 daten %>% ggplot() + 
   geom_point( aes( x = minT, y = maxT ) ) +
-  geom_smooth( aes( x = minT, y = maxT ), method = 'lm') +
+  geom_smooth( aes( x = minT, y = maxT ), method = 'lm', formula = y ~ x ) +
   scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
@@ -154,7 +152,7 @@ print(ci)
 
 daten %>% ggplot() + 
   geom_point( aes( x = cospi( as.numeric(Datum - as.Date("2021-07-15"))/182.5), y = maxT ) ) +
-  geom_smooth( aes( x = cospi( as.numeric(Datum - as.Date("2021-07-15"))/182.5), y = maxT ), method = 'lm') +
+  geom_smooth( aes( x = cospi( as.numeric(Datum - as.Date("2021-07-15"))/182.5), y = maxT ), method = 'lm', formula = y ~ x) +
   scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +

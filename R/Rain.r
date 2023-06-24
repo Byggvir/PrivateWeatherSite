@@ -10,7 +10,7 @@
 
 MyScriptName <- "Rain"
 
-options(OutDec=',')
+options(OutDec = ',')
 
 require(data.table)
 library(tidyverse)
@@ -80,15 +80,20 @@ SQL <- paste( 'select'
 rain <- RunSQL(SQL)
 
 rain$Monate <- factor(rain$Monat, levels = 1:12, labels = Monatsnamen)
-rain$Jahre <- factor(rain$Jahr, levels = unique(rain$Jahr), labels = paste('Jahr',unique(rain$Jahr)))
+rain$Jahre <- factor(rain$Jahr, levels = unique(rain$Jahr), labels = unique(rain$Jahr) )
 
 today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
-rain %>% ggplot() + 
-  geom_bar( aes( x = Monate, y = Regen, fill = Jahre ), position = "dodge", stat = 'identity' ) +
+rain %>% ggplot( aes( x = Monate, y = Regen ) ) + 
+  geom_bar( aes(fill = Jahre ), position = position_dodge2( width = 0.9 ), stat = 'identity' ) +
+  geom_text( aes(label = round(Regen,1) )
+            , position = position_dodge2( width = 0.9 )
+            , vjust = -0.5 
+            , size = 2  ) +
   # scale_x_date() +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+#  scale_y_break ( c(150,290) ) +
   theme_ipsum() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
@@ -105,8 +110,8 @@ ggsave(
   , plot = P
   , device = 'png'
   , bg = "white"
-  , width = 1920 * 2
-  , height = 1080 * 2
+  , width = 1920
+  , height = 1080
   , units = "px"
   , dpi = 144
 )

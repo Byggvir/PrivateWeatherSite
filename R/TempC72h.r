@@ -23,8 +23,6 @@ library(viridis)
 library(hrbrthemes)
 library(scales)
 library(ragg)
-#library(extrafont)
-#extrafont::loadfonts()
 
 # Set Working directory to git root
 
@@ -73,7 +71,7 @@ today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
 daten %>% ggplot() + 
-  geom_line( aes( x = Zeit, y = temperature, colour = 'Temperatur' ), size = 0.1 ) +
+  geom_line( aes( x = Zeit, y = temperature, colour = 'Temperatur' ), linewidth = 0.1 ) +
 
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
@@ -106,8 +104,8 @@ ggsave(  paste(
 )
 
 daten %>% ggplot() + 
-  geom_line( aes( x = Zeit, y = rel_air_pressure, colour = 'Relativ' ), size = 0.1 ) +
-  geom_line( aes( x = Zeit, y = abs_air_pressure, colour = 'Absolut' ), size = 0.1 ) +
+  geom_line( aes( x = Zeit, y = rel_air_pressure, colour = 'Relativ' ), linewidth = 0.1 ) +
+  geom_line( aes( x = Zeit, y = abs_air_pressure, colour = 'Absolut' ), linewidth = 0.1 ) +
   
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
@@ -140,7 +138,7 @@ ggsave(  paste(
 
 
 daten %>% ggplot() + 
-  geom_line( aes( x = Zeit, y = solarradiation, colour = 'Leistung' ), size = 0.1 ) +
+  geom_line( aes( x = Zeit, y = solarradiation, colour = 'Leistung' ), linewidth = 0.1 ) +
 
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +

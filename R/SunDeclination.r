@@ -51,7 +51,6 @@ if ( SD[length(SD)] != "R" ) {
 setwd(WD)
 
 source("lib/myfunctions.r")
-source("lib/mytheme.r")
 source("lib/sql.r")
 
 today <- Sys.Date()

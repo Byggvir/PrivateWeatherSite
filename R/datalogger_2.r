@@ -51,7 +51,7 @@ source("lib/myfunctions.r")
 source("lib/mytheme.r")
 source("lib/sql.r")
 
-outdir <- 'png/Umfragen/'
+outdir <- '../png/datalogger/'
 dir.create( outdir , showWarnings = FALSE, recursive = FALSE, mode = "0777")
 
 today <- Sys.Date()
@@ -64,18 +64,38 @@ T_Date <- function( Datum , intercept, slope) {
 }
 
 SQL <- paste( 
-    'select date(dateutc) as Datum, "Mittelerde" as Quelle, Fahrenheit_Celsius(min(tempf)) as Temperature'
+    'select dateutc as Datum, "Mittelerde" as Quelle, Fahrenheit_Celsius(tempf) as Temperature'
   , ' from reports where dateutc > date(SUBDATE(now(), INTERVAL 60 DAY)) group by Datum'
   , 'union'
-  ,  'select date(dateutc) as Datum, "EL51H" as Quelle, min(Temperature) as Temperature'
-  , ' from datalogger where dateutc > date(SUBDATE(now(), INTERVAL 60 DAY)) group by Datum; '
+  ,  'select dateutc as Datum, "EL51H" as Quelle, Temperature as Temperature'
+  , ' from datalogger where dateutc > date(SUBDATE(now(), INTERVAL 60 DAY)); '
 )
 
 datalogger <- RunSQL(SQL)
-datalogger %>% ggplot() + 
-  geom_line( aes( x = Datum, y = Temperature, colour = Quelle ) , size = 1 ) +
 
-  scale_x_date( breaks = '1 week' ) + 
+# Jahr
+
+J <- year(datalogger$Datum)
+JJ <- unique(J)
+
+# Year of calendarweek
+
+isoJ <- isoyear(datalogger$Datum)
+isoJJ <- unique(isoJ)
+
+# Factor dateutc
+
+datalogger$Jahre <- factor( J, levels = JJ, labels = JJ)
+datalogger$Monate <- factor( month(datalogger$Datum), levels = 1:12, labels = Monatsnamen)
+
+datalogger$KwJahre <- factor( isoJ, levels = isoJJ, labels = isoJJ)
+datalogger$Kw <- factor( isoweek(datalogger$Datum), levels = 1:53, labels = paste('Kw', 1:53))
+
+
+datalogger %>% ggplot() + 
+  geom_boxplot( aes( x = Kw, y = Temperature, fill = Quelle ) ) +
+
+  # scale_x_date( breaks = '1 week' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
 

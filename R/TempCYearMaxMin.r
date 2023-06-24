@@ -10,7 +10,7 @@
 
 MyScriptName <- "TempCYearMaxMin"
 
-options(OutDec=',')
+options(OutDec = ',')
 
 require(data.table)
 library(tidyverse)
@@ -88,14 +88,14 @@ ra2 <- lm( minT ~ cospi( as.numeric(Datum - as.Date("2021-07-20"))/182.5), data 
 ci2 <- confint(ra2, CI=0.95)
 
 daten %>% ggplot() + 
-  geom_smooth( aes( x = Datum, y = maxT, colour = 'Max' ), size = 1 ) +
-  geom_smooth( aes( x = Datum, y = minT, colour = 'Min' ), size = 1 ) +
+  geom_smooth( aes( x = Datum, y = maxT, colour = 'Max' ), method = 'loess', formula = y ~ x, linewidth = 1 ) +
+  geom_smooth( aes( x = Datum, y = minT, colour = 'Min' ), method = 'loess', formula = y ~ x, linewidth = 1 ) +
   
   geom_point( aes( x = Datum, y = maxT, colour = 'Max' ), size = 1 ) +
   geom_point( aes( x = Datum, y = minT, colour = 'Min' ), size = 1 ) +
   
-  geom_function( fun = T_Date, args = list (intercept = ra1$coefficients[1], slope = ra1$coefficients[2]), size = 2) +
-  geom_function( fun = T_Date, args = list (intercept = ra2$coefficients[1], slope = ra2$coefficients[2]), size = 2) +
+  geom_function( fun = T_Date, args = list (intercept = ra1$coefficients[1], slope = ra1$coefficients[2]), linewidth = 2) +
+  geom_function( fun = T_Date, args = list (intercept = ra2$coefficients[1], slope = ra2$coefficients[2]), linewidth = 2) +
   # facet_wrap(vars(Jahr)) +
   
   scale_x_date( breaks = '1 month', date_labels = "%b %Y" ) + 
@@ -126,9 +126,10 @@ ggsave(  paste(
 )
 
 # daten %>% ggplot(aes( x = cospi( as.numeric(Datum - as.Date("2021-07-20"))/182.5), y = maxT, colour = Jahre )) + 
+
 daten %>% ggplot(aes( x = yday(Datum), y = maxT, colour = Jahre )) + 
   geom_point( size = 2, alpha = 0.3 ) +
-  geom_smooth( ) +
+  geom_smooth( method = 'loess', formula = y ~ x )  +
 #  geom_abline(intercept = ci1[1,1], slope = ci1[2,1]) +
 #  geom_abline(intercept = ci1[1,2], slope = ci1[2,2]) +
   scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
@@ -139,7 +140,7 @@ daten %>% ggplot(aes( x = yday(Datum), y = maxT, colour = Jahre )) +
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
   labs(  title = paste( 'Temperaturen Rheinbach' )
-         , subtitle = 'Minimale / Maximale Temperatur des Tages'
+         , subtitle = 'Maximale Temperatur des Tages'
          , x = "Datum"
          , y = "Temperatur [°C]"
          , colour = 'Tagestemperatur'

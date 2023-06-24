@@ -10,7 +10,7 @@
 
 MyScriptName <- "TempCYear"
 
-options(OutDec=',')
+options(OutDec = ',')
 
 require(data.table)
 library(tidyverse)
@@ -23,8 +23,6 @@ library(viridis)
 library(hrbrthemes)
 library(scales)
 library(ragg)
-#library(extrafont)
-#extrafont::loadfonts()
 
 # Set Working directory to git root
 
@@ -51,7 +49,6 @@ if ( SD[length(SD)] != "R" ) {
 setwd(WD)
 
 source("lib/myfunctions.r")
-source("lib/mytheme.r")
 source("lib/sql.r")
 
 outdir <- '../png/Temperatur/'
@@ -67,8 +64,6 @@ T_Date <- function( Datum , intercept, slope) {
 
 SQL <- paste( 'select'
               , 'dateutc as Datum '
-              , ', year(dateutc) as Jahr'
-              , ', month(dateutc) as Monat '
               , ', Fahrenheit_Celsius(tempf) as Temperatur'
               , 'from reports'
               , 'where id = 1 '
@@ -76,8 +71,24 @@ SQL <- paste( 'select'
 )
 
 TT <- RunSQL(SQL)
-TT$Jahre <- factor(TT$Jahr, levels = 2021:2023, labels = paste('Jahr', 2021:2023))
-TT$Monate <- factor(TT$Monat, levels = 1:12, labels = Monatsnamen)
+
+# Jahr
+
+J <- year(TT$Datum)
+JJ <- unique(J)
+
+# Year of calendarweek
+
+isoJ <- isoyear(TT$Datum)
+isoJJ <- unique(isoJ)
+
+# Factor dateutc
+
+TT$Jahre <- factor( J, levels = JJ, labels = JJ)
+TT$Monate <- factor( month(TT$Datum), levels = 1:12, labels = Monatsnamen)
+
+TT$KwJahre <- factor( isoJ, levels = isoJJ, labels = isoJJ)
+TT$Kw <- factor( isoweek(TT$Datum), levels = 1:53, labels = paste('Kw', 1:53))
 
 
 today <- Sys.Date()
@@ -99,7 +110,34 @@ TT %>% ggplot(aes( x = Monate, y = Temperatur )) +
   ) -> P3
 
 ggsave(  paste( 
-  file = outdir, MyScriptName, '_V.png', sep='')
+  file = outdir, MyScriptName, '_Monate.png', sep='')
+  , plot = P3
+  , device = 'png'
+  , bg = "white"
+  , width = 1920
+  , height = 1080
+  , units = "px"
+  , dpi = 144
+)
+
+
+TT %>% ggplot(aes( x = Kw, y = Temperatur )) + 
+  geom_boxplot( aes( fill = KwJahre ) ) +
+  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  theme_ipsum() +
+  theme(  legend.position="right"
+          , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=0.5)
+  ) +
+  labs(  title = paste( 'Temperaturen Rheinbach - Mittelerde' )
+         , subtitle = 'Minutenwerte der dnt WeatherScreen Pro'
+         , x = 'Kalenderwoche'
+         , y = 'Temperatur [°C]'
+         , colour = 'Jahre'
+         , caption = paste( "Stand:", heute )
+  ) -> P3
+
+ggsave(  paste( 
+  file = outdir, MyScriptName, '_Wochen.png', sep='')
   , plot = P3
   , device = 'png'
   , bg = "white"

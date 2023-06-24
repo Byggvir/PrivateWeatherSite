@@ -8,7 +8,7 @@
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <- "datalogger"
+MyScriptName <- "wintergarten-report"
 
 options(OutDec=',')
 
@@ -23,6 +23,7 @@ library(viridis)
 library(hrbrthemes)
 library(scales)
 library(ragg)
+
 # Set Working directory to git root
 
 if (rstudioapi::isAvailable()){
@@ -107,4 +108,44 @@ ggsave( file = paste( outdir, 'wintergarten', heute, '.png', sep='')
   , height = 1080
   , units = "px"
   , dpi = 144
+)
+
+SQL <- paste( 'call Wintergarten();' )
+
+WG <- RunSQL(SQL)
+
+ra <- lm(Wintergarten ~ Aussen, data = WG )
+print(summary(ra))
+
+WG %>% ggplot( aes( x = Aussen, y = Wintergarten ) ) + 
+  geom_point( size = 1 ) +
+  geom_smooth( size = 1, method = 'glm' ) +
+  scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE )) +
+  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE )) +
+  expand_limits( x = 0 , y = 0) +
+  coord_fixed() +
+  
+  theme_ipsum() +
+  theme(  legend.position="right"
+          , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+          , strip.text.x = element_text (
+            color = "black"
+            , face = "bold.italic"
+          ) ) +
+  labs(  title = paste( 'Wintergaten vs Außentemperatur' )
+         , subtitle = 'Temperatur'
+         , x = "Außen [° C]"
+         , y = "Wintergarten [° C]"
+         , colour = 'Quelle'
+         , caption = paste( "Stand:", heute )
+  ) -> P
+
+ggsave( file = paste( outdir, 'wintergarten', 'scatterplot', ',png', sep='')
+        , plot = P
+        , device = 'png'
+        , bg = "white"
+        , width = 1920
+        , height = 1080
+        , units = "px"
+        , dpi = 144
 )

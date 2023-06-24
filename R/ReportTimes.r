@@ -8,7 +8,7 @@
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <- "TempCYear"
+MyScriptName <- "ReportTimes"
 
 options(OutDec=',')
 
@@ -65,7 +65,7 @@ T_Date <- function( Datum , intercept, slope) {
   
 }
 
-SQL <- paste( 'select year(t1.dateutc) as Jahr, month(t1.dateutc) as Monat, time_to_sec(timediff(t1.dateutc,t2.dateutc)) as delta from times as t1 join times as t2 on t1.n = t2.n+1;')
+SQL <- paste( 'select *, year(dateutc) as Jahr, month(dateutc) as Monat from TimeUntilNextReport;')
 
 RT <- RunSQL(SQL)
 RT$Jahre <- factor(RT$Jahr, levels = unique(RT$Jahr), labels = unique(RT$Jahr)) 
@@ -74,7 +74,7 @@ RT$Monate <- factor(RT$Monat, levels = 1:12, labels = Monatsnamen)
 today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
-RT %>% filter (delta < 1000 ) %>% ggplot(aes( x = delta, groupe = Monate)) + 
+RT %>% filter (delta < 200 ) %>% ggplot(aes( x = delta, groupe = Monate)) + 
   geom_histogram( aes( fill = Monate), binwidth = 1, position = position_stack()) +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   theme_ipsum() +
@@ -83,8 +83,8 @@ RT %>% filter (delta < 1000 ) %>% ggplot(aes( x = delta, groupe = Monate)) +
   ) +
   labs(  title = paste( 'Abstand zwischen zwei Meldungen' )
          , subtitle = 'Minutenwerte der DNT Weatherscreen Pro'
-         , x = 'Anzahl'
-         , y = 'Sekunden'
+         , x = 'Sekunden'
+         , y = 'Anzahl'
          , colour = 'Jahre'
          , caption = paste( "Stand:", heute )
   ) -> P3

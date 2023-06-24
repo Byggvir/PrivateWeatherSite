@@ -72,7 +72,7 @@ heute <- format(today, "%Y%m%d")
 
 for ( l in unique(DL$Ort) ) {
   
-  L <- DL %>% filter( Ort == l )
+  L <- DL %>% filter( Ort == l & Zeit > '2022-10-01')
   scl <- max(L$Temperature) / max(L$Humidity)
   
   L %>% ggplot() + 

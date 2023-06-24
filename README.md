@@ -12,7 +12,7 @@ Private Wetterstationen können Daten an Wetterportale im Internet übertragen: 
   * [WeatherCloud](https://weathercloud.net/)
   * [WOW - Weather Observation Website](www.WeatherObservationWebsite.com)
 
-können die Daten an ein eingenes Portal gesendet werden.
+können die Daten an ein eigenes Portal gesendet werden.
 
 Dieses Git stellt eine Website (nicht nur für das heimische Netz) bereit, das die Daten über http entgegennimmt, in eine MariaDB / MySQL Datenbank speichert und anzeigt.
 
@@ -21,11 +21,11 @@ Meine *dnt WeatherScreen Pro* unterstütz dazu zwei Protokolle:
   * Ecowitt
   * Wunderground
 
-Mein privates Wetterprotal im Heimnatz ist über DynDNS unter [weather.dyn.byggvir.de](https://weather.dyn.byggvir.de) erreichbar.
+Mein privates Wetterprotal im Heimnetz ist über DynDNS unter [weather.dyn.byggvir.de](https://weather.dyn.byggvir.de) erreichbar.
 
 In diesem Git wird das Protokoll von Wunderground verwendet.
 
-Die Meldungen der Wetterstation nimmt die Website über das Script update.php entgegen. Meine dnt Weatherstation Pro berichtet nicht alle im Protokoll möglichen Parameter. Ich habe dennoch alle Parameter in der  Tabelle *reports* definiert, so dass eine anderer Wetterstation, die mehr Daten berichtet, bebenso genutzt werden kann.
+Die Meldungen der Wetterstation nimmt die Website über das Script update.php entgegen. Meine *dnt Weatherstation Pro* berichtet nicht alle im Protokoll möglichen Parameter. Ich habe dennoch alle Parameter in der  Tabelle *reports* definiert, so dass eine anderer Wetterstation, die mehr Daten berichtet, bebenso genutzt werden kann.
 
 ## Requirements
 
@@ -84,7 +84,7 @@ Die Stationen müssen manuell in die Tabelle *stations* eingetragen werden. Z.B 
 
 ## Installation R
 
-Die Installation von R ist etwas umfangreicher es werden zahlreiche Packages benötig. Wenn es kein ***nackter*** Host kann es eine Weile dauern, bis alle Vorausetzungen für die Installation der R-Packete gegeben sind.
+Die Installation von R ist etwas umfangreicher es werden zahlreiche Packages benötig. Wenn es ein ***nackter*** Host ist, kann es eine Weile dauern, bis alle Vorausetzungen für die Installation der R-Packete gegeben sind.
 
 Die Liste der Debian-Packete, die ich im Laufe der Zeit auf einem Raspberry Pi mit Desktop installieren musste, findet sich in [Debian-Packages](Debian-Packages.md).
 

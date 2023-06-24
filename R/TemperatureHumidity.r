@@ -10,7 +10,7 @@
 
 MyScriptName <- "TemperatureHumidity"
 
-options(OutDec=',')
+options(OutDec = ',')
 
 require(data.table)
 library(tidyverse)
@@ -84,9 +84,9 @@ today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
 TTRF %>% ggplot() + 
-  geom_point( aes( x = Temperature, y = Humidity, colour = Jahre ), size = 0.1 , alpha = 0.05) +
+  geom_point( aes( x = Temperature, y = Humidity/100, colour = Jahre ), size = 0.1 , alpha = 0.2) +
   scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
-  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  scale_y_continuous( labels = scales::percent ) +
   # scale_fill_viridis(discrete = TRUE) +
   facet_wrap(vars(Monate), nrow = 3) +
   theme_ipsum() +

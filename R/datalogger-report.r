@@ -80,7 +80,7 @@ scl <-  max(daten$Humidity) / max(daten$Temperature)
                                  
 daten %>% filter (Zeit > as.Date('2022-08-20 00:00') ) %>% ggplot() + 
 # daten %>% ggplot() + 
-  geom_line( aes( x = Zeit, y = Temperature, color = name, group = name ) , size = 0.5 ) +
+  geom_point( aes( x = Zeit, y = Temperature, color = name, group = name ) , size = 0.1 ) +
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
 
@@ -101,7 +101,7 @@ daten %>% filter (Zeit > as.Date('2022-08-20 00:00') ) %>% ggplot() +
   
   daten %>% filter (Zeit > as.Date('2022-08-20 00:00') ) %>% ggplot() + 
     # daten %>% ggplot() + 
-    geom_line( aes( x = Zeit, y = Humidity /100, group = name, colour = name ) , size = 0.5 ) +
+    geom_point( aes( x = Zeit, y = Humidity /100, group = name, colour = name ) , size = 0.1 ) +
     scale_x_datetime( ) + # breaks = '1 hour' ) + 
     scale_y_continuous( labels = scales::percent  ) +
     theme_ipsum() +

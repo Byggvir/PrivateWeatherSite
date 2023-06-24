@@ -10,7 +10,7 @@
 
 MyScriptName <- "Humidity"
 
-options(OutDec=',')
+options(OutDec = ',')
 
 require(data.table)
 library(tidyverse)
@@ -23,8 +23,6 @@ library(viridis)
 library(hrbrthemes)
 library(scales)
 library(ragg)
-#library(extrafont)
-#extrafont::loadfonts()
 
 # Set Working directory to git root
 
@@ -86,9 +84,9 @@ TTRF$Monate <- factor(TTRF$Monat,levels = 1:12, labels = Monatsnamen)
 TTRF$AbsHumidity <- SaettigungWasser(TTRF$Temperatur+273.15) * TTRF$Humidity / 100
 
 
-TTRF %>% ggplot(aes( x = Monate, y = Humidity )) + 
+TTRF %>% ggplot(aes( x = Monate, y = Humidity /100 )) + 
   geom_boxplot( aes( fill = Jahre ) ) +
-  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  scale_y_continuous( labels = scales::percent ) +
   theme_ipsum() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=0.5)

@@ -10,7 +10,7 @@
 
 MyScriptName <- "TempWeek"
 
-options(OutDec=',')
+options(OutDec = ',')
 
 require(data.table)
 library(tidyverse)
