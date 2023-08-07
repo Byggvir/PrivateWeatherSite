@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 #
 #
-# Script: Weather.r
+# Script: TempCYear.r
 #
 # Stand: 2022-01-21
 # (c) 2021 by Thomas Arend, Rheinbach
@@ -40,6 +40,7 @@ if (rstudioapi::isAvailable()){
 }
 
 WD <- paste(SD[1:(length(SD))],collapse='/')
+
 if ( SD[length(SD)] != "R" ) {
   
   WD <- paste( WD,"/R", sep = '')
@@ -47,6 +48,7 @@ if ( SD[length(SD)] != "R" ) {
 }
 
 setwd(WD)
+print(WD)
 
 source("lib/myfunctions.r")
 source("lib/sql.r")

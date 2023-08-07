@@ -49,6 +49,7 @@ if (rstudioapi::isAvailable()){
 
 WD <- paste(SD[1:(length(SD)-1)],collapse='/')
 setwd(WD)
+print(WD)
 
 source("R/lib/myfunctions.r")
 source("R/lib/sql.r")
@@ -109,7 +110,7 @@ RR %>% filter( Datum > "2022-12-31" ) %>% ggplot( aes( x = Datum, y = RR)) +
              , position = position_dodge2( width = 0.9 )
              , vjust = -0.5 
              , size = 2  ) +
-  # scale_x_date() +
+  scale_x_date( date_breaks = 'month' ) +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   theme_ipsum() +
   theme(  legend.position="right"

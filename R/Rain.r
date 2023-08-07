@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 #
 #
-# Script: Weather.r
+# Script: Rain.r
 #
 # Stand: 2022-01-21
 # (c) 2021 by Thomas Arend, Rheinbach
@@ -47,6 +47,7 @@ if ( SD[length(SD)] != "R" ) {
 }
 
 setwd(WD)
+print(WD)
 
 source("lib/myfunctions.r")
 source("lib/mytheme.r")

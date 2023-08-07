@@ -1,16 +1,16 @@
 #!/usr/bin/env Rscript
 #
 #
-# Script: TempWeek.r
+# Script: TempCompareDays.r
 #
 # Stand: 2022-03-10
 # (c) 2021 by Thomas Arend, Rheinbach
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <- "TempWeek"
+MyScriptName <- "TempCompareDays.r"
 
-options(OutDec = ',')
+options(OutDec=',')
 
 require(data.table)
 library(tidyverse)
@@ -47,41 +47,34 @@ if ( SD[length(SD)] != "R" ) {
 }
 
 setwd(WD)
-print(WD)
 
 source("lib/myfunctions.r")
-source("lib/mytheme.r")
 source("lib/sql.r")
-
-
-outdir <- '../png/week/'
-dir.create( outdir , showWarnings = FALSE, recursive = FALSE, mode = "0777")
-
-T_Date <- function( Datum , intercept, slope) {
-  
-  return (intercept + slope * cospi( as.numeric(Datum - as.Date("2021-07-20"))/182.5))
-  
-}
-
-SQL <- paste( 
-    'select date(dateutc) as Datum'
-    , ', weekyear(dateutc) as Jahr'
-    , ', week(dateutc,3) as Kw'
-    , ', Fahrenheit_Celsius(tempf) as Temperature'
-    , ' from reports ;'
-)
-daten <- RunSQL(SQL)
 
 today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
-daten %>% filter( Kw >19 & Kw < 41) %>% ggplot() + 
-  geom_line( aes( x = yday(Datum), y = Temperature, colour = 'Temperatur') ) +
-  facet_wrap(vars(Jahr)) +
-  # scale_x_date ( breaks = '1 week' ) + 
+outdir <- '../png/Temperatur/'
+dir.create( outdir , showWarnings = FALSE, recursive = TRUE, mode = "0777" )
+
+SQL <- paste( 
+    'select dateutc as Datum, 1 as Tag, Fahrenheit_Celsius(tempf) as temperature'
+  , ' from reports where date(dateutc) = "2022-07-19" '
+  , ' union '
+  , 'select dateutc as Datum, 2 as Tag, Fahrenheit_Celsius(tempf) as temperature'
+  , ' from reports where date(dateutc) =', paste0('"', heute, '"'), ';'
+)
+
+daten <- RunSQL(SQL)
+daten$Zeit <- hour(daten$Datum)+ minute(daten$Datum) / 60 + second(daten$Datum) / 3600
+daten$Tage <- factor( daten$Tag, levels = 1:2, labels = c ("Jahr 2022","Jahr 2023") )
+                     
+daten %>% ggplot() +
+  geom_line( aes( x = Zeit, y = temperature, colour = Tage ), linewidth = 2 ) +
+
+  scale_x_continuous( breaks = 0:24, labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
-
   theme_ipsum() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
@@ -89,21 +82,20 @@ daten %>% filter( Kw >19 & Kw < 41) %>% ggplot() +
               color = "black"
             , face = "bold.italic"
           ) ) +
-  labs(  title = paste( 'Temperaturen Rheinbach' )
-         , subtitle = 't'
-         , x = "Tag im Jahr"
+  labs(  title = paste( 'Temperaturvergleich zweier Tage' )
+         , subtitle = paste('2022-07-19 vs',format(today, "%Y-%m-%d") )
+         , x = "UTC [h]"
          , y = "Temperatur [°C]"
          , colour = 'Legende'
          , caption = paste( "Stand:", heute )
   ) -> P
 
-ggsave(  
-  file = paste( outdir, 'day.png', sep='')
+ggsave(  file = paste0( outdir, 'TemperaturVergleich_', heute, '.png', sep='')
   , plot = P
   , device = 'png'
   , bg = "white"
   , width = 1920
   , height = 1080
   , units = "px"
-  , dpi = 150
+  , dpi = 144
 )

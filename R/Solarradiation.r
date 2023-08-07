@@ -47,6 +47,7 @@ if ( SD[length(SD)] != "R" ) {
 }
 
 setwd(WD)
+print(WD)
 
 source("lib/myfunctions.r")
 source("lib/mytheme.r")

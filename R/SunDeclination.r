@@ -23,8 +23,6 @@ library(viridis)
 library(hrbrthemes)
 library(scales)
 library(ragg)
-#library(extrafont)
-#extrafont::loadfonts()
 
 # Set Working directory to git root
 
@@ -70,14 +68,14 @@ Deklination <- function( x ) {
 
 SunDeclination <- data.table(
   
-  Datum = seq(from=as.Date("2022-01-01"), to=as.Date("2022-12-31"), by = 1 )
+  Datum = seq(from=as.Date("2023-01-01"), to=as.Date("2023-12-31"), by = 1 )
   
 )
 
 SunDeclination$Winkel <- Deklination(SunDeclination$Datum)
 
 SunDeclination %>% ggplot( aes(x = Datum) ) + 
-  geom_function( fun = Deklination, size = 2, color = 'black' ) +
+  geom_function( fun = Deklination, linewidth = 2, color = 'black' ) +
   scale_x_date( breaks = '1 month', date_labels = "%b %Y" ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
