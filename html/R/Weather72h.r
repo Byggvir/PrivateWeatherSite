@@ -104,7 +104,7 @@ scl = ( UVmax / SRmax )
 for (Zeitraum in c(72, 168) ) {
      
 daten %>%  filter(Zeit > today - Zeitraum / 24 ) %>% ggplot() + 
-  geom_line( aes( x = Zeit, y = temperature, colour = 'Temperatur' ), size = 1 ) +
+  geom_line( aes( x = Zeit, y = temperature, colour = 'Temperatur' ), linewidth = 1 ) +
   # scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
@@ -134,7 +134,7 @@ ggsave(  paste(
 
 
 daten %>%  filter(Zeit > today - Zeitraum / 24) %>% ggplot() + 
-  geom_line( aes( x = Zeit, y = humidity, colour = 'Luftfeuchte' ), size = 1 ) +
+  geom_line( aes( x = Zeit, y = humidity, colour = 'Luftfeuchte' ), linewidth = 1 ) +
   # scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_fill_viridis(discrete = TRUE) +
@@ -164,8 +164,8 @@ ggsave(  paste(
 )
 
 daten %>%  filter(Zeit > today - Zeitraum / 24) %>% ggplot() + 
-  geom_line( aes( x = Zeit, y = rel_air_pressure, colour = 'Relativ' ), size = 1 ) +
-  geom_line( aes( x = Zeit, y = abs_air_pressure, colour = 'Absolut' ), size = 1 ) +
+  geom_line( aes( x = Zeit, y = rel_air_pressure, colour = 'Relativ' ), linewidth = 1 ) +
+  geom_line( aes( x = Zeit, y = abs_air_pressure, colour = 'Absolut' ), linewidth = 1 ) +
   
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
