@@ -13,18 +13,16 @@ MyScriptName <- "Weather72h"
 options(OutDec=',')
 
 require(data.table)
+library(lubridate)
 library(tidyverse)
 library(grid)
 library(gridExtra)
 library(gtable)
-library(lubridate)
 library(ggplot2)
 library(viridis)
 library(hrbrthemes)
 library(scales)
 library(ragg)
-#library(extrafont)
-#extrafont::loadfonts()
 
 # Set Working directory to git root
 
@@ -72,6 +70,9 @@ windvector <- function ( d, v ) {
   
 }
 
+today <- Sys.Date()
+heute <- format(today, "%Y%m%d")
+
 SQL <- 'select * from stations where id = 1;'
 
 Stations <- RunSQL(SQL)
@@ -92,15 +93,11 @@ SQL <- paste(
 
 daten <- RunSQL(SQL)
 
-today <- Sys.Date()
-heute <- format(today, "%Y%m%d")
-
-
 minZ <- min(daten$Zeit)
 maxT <- max(daten$temperature)
 
-UVmax = max(c(daten$UV,10))
-SRmax = max(c(daten$solarradiation,1000))
+UVmax = max(c(daten$UV,10), na.rm = TRUE)
+SRmax = max(c(daten$solarradiation,1000), na.rm = TRUE)
 
 scl = ( UVmax / SRmax )
 
@@ -197,14 +194,12 @@ ggsave(  paste(
 )
 
 daten %>%  filter(Zeit > today - Zeitraum / 24) %>% ggplot() + 
-  geom_line( aes( x = Zeit, y = solarradiation, colour = 'Leistung' ), size = 1 ) +
-  geom_line( aes( x = Zeit, y = UV / scl, colour = 'UV Index' ), size = 1 ) +
-  
+  geom_line( aes( x = Zeit, y = solarradiation, colour = 'Leistung' ), linewidth = 1 ) +
+  geom_line( aes( x = Zeit, y = UV / scl, colour = 'UV Index' ), linewidth = 1 ) +
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ),
                       sec.axis = sec_axis( ~.* scl, name = "UV Index"
                                            , labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ))) +
-  scale_fill_viridis(discrete = TRUE) +
   theme_ipsum() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)

@@ -42,6 +42,7 @@ $SQL = "SELECT "
   . ", format(Barom_in2hPa(absbaromin),1) as absbaromhPa"
   . ", round(mph_ms(windspeedmph),1) as Windgeschwindigkeit"
   . ", winddir as Windrichtung"
+  . ", solarradiation as Sonnenstrahlung"
   . ", format(inch_mm(dailyrainin),1) as RainDay"
   . ", format(inch_mm(weeklyrainin),1) as RainWeek"
   . ", format(inch_mm(monthlyrainin),1) as RainMonth"
@@ -58,6 +59,7 @@ $SQL = "SELECT "
     . '<th>Humindity<br />[%]</th>'
     . '<th>Air pressure<br />rel. / abs. [hPa]</th>'
     . '<th>Wind<br />[° , m/s]</th>'
+    . '<th>Solar<br />[W/m²]</th>'
     . '<th>Rain<br />day [mm]</th>'
     . '<th>Rain<br />week [mm]</th>'
     . '<th>Rain<br />month [mm]</th>'
@@ -71,6 +73,7 @@ $SQL = "SELECT "
       echo '<td class="value">' . $result["humidity"] . '</td>' . "\n" ;
       echo '<td class="value">' . $result["baromhPa"] . ' / ' . $result["absbaromhPa"] . '</td>' . "\n" ;
       echo '<td class="value">' . $result["Windrichtung"] . ' - ' . $result["Windgeschwindigkeit"] . '</td>' . "\n" ;
+      echo '<td class="value">' . $result["Sonnenstrahlung"] . '</td>' . "\n" ;
       echo '<td class="value">' . $result["RainDay"] . '</td>' . "\n" ;
       echo '<td class="value">' . $result["RainWeek"] . '</td>' . "\n" ;
       echo '<td class="value">' . $result["RainMonth"] . '</td>' . "\n" ;
