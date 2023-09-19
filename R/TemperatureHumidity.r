@@ -84,12 +84,12 @@ TTRF$AbsHumidity <- SaettigungWasser(TTRF$Temperatur+273.15) * TTRF$Humidity / 1
 today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
-TTRF %>% ggplot() + 
-  geom_point( aes( x = Temperature, y = Humidity/100, colour = Jahre ), size = 0.1 , alpha = 0.2) +
+TTRF %>% filter ( Monat == 8 ) %>% ggplot() + 
+  geom_point( aes( x = Temperature, y = Humidity/100, colour = Monate ), size = 2 , alpha = 0.2) +
   scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_y_continuous( labels = scales::percent ) +
   # scale_fill_viridis(discrete = TRUE) +
-  facet_wrap(vars(Monate), nrow = 3) +
+  facet_wrap(vars(Jahre), nrow = 3) +
   theme_ipsum() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
@@ -113,12 +113,12 @@ ggsave(
 )
 
 
-TTRF %>% ggplot() + 
-  geom_point( aes( x = Temperature, y = AbsHumidity, colour = Jahre ), size = 0.5, alpha = 0.05 ) +
+TTRF %>% filter ( Monat == 8 ) %>%  ggplot() + 
+  geom_point( aes( x = Temperature, y = AbsHumidity, colour = Monate ), size = 2, alpha = 0.05 ) +
   scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   # scale_fill_viridis(discrete = TRUE) +
-  facet_wrap(vars(Monate), nrow = 3) +
+  facet_wrap(vars(Jahre), nrow = 3) +
   theme_ipsum() +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
