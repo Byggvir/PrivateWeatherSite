@@ -47,7 +47,7 @@ if ( SD[length(SD)] != "R" ) {
 }
 
 setwd(WD)
-print(WD)
+# print(WD)
 
 source("lib/myfunctions.r")
 source("lib/mytheme.r")
@@ -79,8 +79,8 @@ scl <-  max(daten$Humidity) / max(daten$Temperature)
                                  
 daten %>% filter (Zeit > as.Date('2022-08-01 00:00') ) %>% ggplot() + 
 # daten %>% ggplot() + 
-  geom_line( aes( x = Zeit, y = Temperature, color = name, group = name ) , size = 1 ) +
-#  geom_line( aes( x = Zeit, y = Humidity / scl, colour = name , group = name ) , size = 1 ) +
+  geom_line( aes( x = Zeit, y = Temperature, color = name, group = name ) , linewidth = 1 ) +
+#  geom_line( aes( x = Zeit, y = Humidity / scl, colour = name , group = name ) , linewidth = 1 ) +
   expand_limits( y = 0 ) +
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ),
@@ -120,7 +120,7 @@ print(summary(ra))
 
 WG %>% ggplot( aes( x = Aussen, y = Wintergarten ) ) + 
   geom_point( size = 1 ) +
-  geom_smooth( size = 1, method = 'glm' ) +
+  geom_smooth( linewidth = 1, method = 'glm' ) +
   scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE )) +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE )) +
   expand_limits( x = 0 , y = 0) +

@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
 #
 #
-# Script: TempWeek.r
+# Script: SolarEnergyYear.r
 #
-# Stand: 2022-03-10
+# Stand: 2022-01-21
 # (c) 2021 by Thomas Arend, Rheinbach
 # E-Mail: thomas@arend-rhb.de
 #
@@ -51,9 +51,10 @@ source("lib/myfunctions.r")
 source("lib/mytheme.r")
 source("lib/sql.r")
 
+outdir <- '../png/Solar/'
+dir.create( outdir , showWarnings = FALSE, recursive = TRUE, mode = "0777" )
 
-outdir <- '../png/week/'
-dir.create( outdir , showWarnings = FALSE, recursive = FALSE, mode = "0777")
+MyPos <- list( lat = 50.620941424520026, long = 6.961696767218697)
 
 T_Date <- function( Datum , intercept, slope) {
   
@@ -61,47 +62,39 @@ T_Date <- function( Datum , intercept, slope) {
   
 }
 
-SQL <- paste( 
-    'select date(dateutc) as Datum'
-    , ', weekyear(dateutc) as Jahr'
-    , ', week(dateutc,3) as Kw'
-    , ', Fahrenheit_Celsius(tempf) as Temperature'
-    , ' from reports ;'
-)
-daten <- RunSQL(SQL)
+PrepareSQL = paste( 'call KeyedTable()' )
+# ExecSQL(SQL = PrepareSQL)
+
+SQL <- paste( 'select Jahr, Monat, sum(Energie) as Energy  from solarenergy group by Jahr, Monat;' )
+Solarradiation <- RunSQL(SQL=SQL)
+Solarradiation[, Jahre := factor( Jahr, levels = unique(Jahr), labels = unique(Jahr) ) ]
+Solarradiation[, Monate := factor( Monat, levels = 1:12, labels = Monatsnamen ) ]
 
 today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
-daten %>% filter( Kw >19 & Kw < 41) %>% ggplot() + 
-  geom_line( aes( x = yday(Datum), y = Temperature, colour = 'Temperatur') ) +
-  facet_wrap(vars(Jahr)) +
-  # scale_x_date ( breaks = '1 week' ) + 
-  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
-  scale_fill_viridis(discrete = TRUE) +
-
+Solarradiation %>% ggplot(aes( x = Monate, y = Energy )) + 
+  geom_bar( aes( fill = Jahre ), stat = 'identity', position = position_dodge2() ) +
+   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   theme_ipsum() +
   theme(  legend.position="right"
-          , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
-          , strip.text.x = element_text (
-              color = "black"
-            , face = "bold.italic"
-          ) ) +
-  labs(  title = paste( 'Temperaturen Rheinbach' )
-         , subtitle = 't'
-         , x = "Tag im Jahr"
-         , y = "Temperatur [°C]"
-         , colour = 'Legende'
+          , axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=0.5)
+  ) +
+  labs(  title = paste( 'Sonnenenergie pro Quardatmeter Rheinbach - Mittelerde' )
+         , subtitle = 'Minutenwerte der dnt WeatherScreen Pro'
+         , x = 'Monat'
+         , y = 'Energie pro Tag [kWh/m²]'
+         , colour = 'Jahre'
          , caption = paste( "Stand:", heute )
-  ) -> P
+  ) -> P3
 
-ggsave(  
-  file = paste( outdir, 'day.png', sep='')
-  , plot = P
+ggsave(  paste( 
+  file = outdir, 'SolarEnergyYear.png', sep='')
+  , plot = P3
   , device = 'png'
   , bg = "white"
   , width = 1920
   , height = 1080
   , units = "px"
-  , dpi = 150
+  , dpi = 144
 )

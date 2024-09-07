@@ -23,8 +23,6 @@ library(viridis)
 library(hrbrthemes)
 library(scales)
 library(ragg)
-#library(extrafont)
-#extrafont::loadfonts()
 
 # Set Working directory to git root
 
@@ -49,7 +47,7 @@ if ( SD[length(SD)] != "R" ) {
 }
 
 setwd(WD)
-print(WD)
+# print(WD)
 
 source("lib/myfunctions.r")
 source("lib/mytheme.r")
@@ -77,15 +75,15 @@ SQL <- paste( 'select'
 
 TTRF <- RunSQL(SQL)
 
-TTRF$Jahre <- factor(TTRF$Jahr, levels = unique(TTRF$Jahr), labels = paste('Jahr', unique(TTRF$Jahr)))
-TTRF$Monate <- factor(TTRF$Monat,levels = 1:12, labels = Monatsnamen)
-TTRF$AbsHumidity <- SaettigungWasser(TTRF$Temperatur+273.15) * TTRF$Humidity / 100
+TTRF[, Jahre := factor( Jahr, levels = unique(Jahr), labels = paste('Jahr', unique(Jahr) ) ) ]
+TTRF[, Monate := factor( Monat,levels = 1:12, labels = Monatsnamen ) ]
+TTRF[, AbsHumidity := SaettigungWasser( Temperature + 273.15 ) * Humidity / 100 ]
 
 today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
 TTRF %>% filter ( Monat == 8 ) %>% ggplot() + 
-  geom_point( aes( x = Temperature, y = Humidity/100, colour = Monate ), size = 2 , alpha = 0.2) +
+  geom_point( aes( x = Temperature, y = Humidity / 100, colour = Monate ), size = 2 , alpha = 0.2) +
   scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_y_continuous( labels = scales::percent ) +
   # scale_fill_viridis(discrete = TRUE) +

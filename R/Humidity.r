@@ -47,7 +47,7 @@ if ( SD[length(SD)] != "R" ) {
 }
 
 setwd(WD)
-print(WD)
+# print(WD)
 
 source("lib/myfunctions.r")
 source("lib/mytheme.r")
@@ -80,9 +80,9 @@ TTRF <- RunSQL(SQL)
 
 TTRF <- RunSQL(SQL)
 
-TTRF$Jahre <- factor(TTRF$Jahr, levels = unique(TTRF$Jahr), labels = paste('Jahr', unique(TTRF$Jahr)))
-TTRF$Monate <- factor(TTRF$Monat,levels = 1:12, labels = Monatsnamen)
-TTRF$AbsHumidity <- SaettigungWasser(TTRF$Temperatur+273.15) * TTRF$Humidity / 100
+TTRF[,Jahre := factor(Jahr, levels = unique(Jahr), labels = paste('Jahr', unique(Jahr))) ]
+TTRF[,Monate := factor(Monat,levels = 1:12, labels = Monatsnamen) ]
+TTRF[,AbsHumidity := SaettigungWasser(Temperatur+273.15) * Humidity / 100 ]
 
 
 TTRF %>% ggplot(aes( x = Monate, y = Humidity /100 )) + 

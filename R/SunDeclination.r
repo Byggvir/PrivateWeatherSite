@@ -62,7 +62,7 @@ Deklination <- function( x ) {
 
   T = as.numeric(x - as.Date("2022-01-01"))
   
-  return ( e * sin(0.016906*(T-81.086)) * 180 / pi  + (90 - MyPos$lat) )
+  return ( e * sin( 0.016906 * (T-81.086) ) * 180 / pi  + (90 - MyPos$lat) )
   
 }
 

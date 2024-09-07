@@ -68,8 +68,8 @@ T_Date <- function( Datum , intercept, slope) {
 SQL <- paste( 'select *, year(dateutc) as Jahr, month(dateutc) as Monat from TimeUntilNextReport;')
 
 RT <- RunSQL(SQL)
-RT$Jahre <- factor(RT$Jahr, levels = unique(RT$Jahr), labels = unique(RT$Jahr)) 
-RT$Monate <- factor(RT$Monat, levels = 1:12, labels = Monatsnamen) 
+RT[, Jahre := factor(Jahr, levels = unique(Jahr), labels = unique(Jahr) ) ] 
+RT[, Monate := factor(Monat, levels = 1:12, labels = Monatsnamen ) ]
   
 today <- Sys.Date()
 heute <- format(today, "%Y%m%d")

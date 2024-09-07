@@ -47,7 +47,7 @@ if ( SD[length(SD)] != "R" ) {
 }
 
 setwd(WD)
-print(WD)
+# print(WD)
 
 source("lib/myfunctions.r")
 source("lib/mytheme.r")
@@ -64,29 +64,18 @@ T_Date <- function( Datum , intercept, slope) {
   
 }
 
-PrepareSQL = paste( 'call KeyedTable()'
-)
+PrepareSQL = paste( 'call KeyedTable()' )
 ExecSQL(SQL = PrepareSQL)
 
-SQL <- paste( 
-    'select date(R.dateutc) as Datum' 
-  , ', year(R.dateutc) as Jahr'
-  , ', month(R.dateutc) as Monat'
-  , ', sum(delta*R.solarradiation) / 3600000 as Energie'
-  , 'from reports as R'
-  , 'join TimeUntilNextReport as T'
-  , 'on T.dateutc = R.dateutc'
-  , 'group by Datum'
-  , ';'
-)
+SQL <- paste( 'select * from solarenergy;' )
 
 Solarradiation <- RunSQL(SQL=SQL)
-Solarradiation$Jahre <- factor(Solarradiation$Jahr, levels = unique(Solarradiation$Jahr), labels = unique(Solarradiation$Jahr))
-Solarradiation$Monate <- factor(Solarradiation$Monat, levels = 1:12, labels = Monatsnamen)
+Solarradiation[, Jahre := factor(Jahr, levels = unique(Jahr), labels = unique(Jahr)) ]
+Solarradiation[, Monate := factor(Monat, levels = 1:12, labels = Monatsnamen) ]
 
-iy <- isoyear(Solarradiation$Datum)
-Solarradiation$ISOYear <- factor(iy, levels = unique(iy), labels = unique(iy) )
-Solarradiation$ISOWeek <- factor(isoweek(Solarradiation$Datum), levels = 1:53, labels = 1:53 )
+Solarradiation[, iy := isoyear(Datum) ]
+Solarradiation[, ISOYear := factor(iy, levels = unique(iy), labels = unique(iy) ) ]
+Solarradiation[, ISOWeek := factor(isoweek(Datum), levels = 1:53, labels = 1:53 ) ]
 
 
 today <- Sys.Date()

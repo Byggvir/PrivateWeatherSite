@@ -42,7 +42,7 @@ if (rstudioapi::isAvailable()){
 WD <- paste(SD[1:(length(SD))],collapse='/')
 
 setwd(WD)
-print(WD)
+# print(WD)
 
 source("lib/myfunctions.r")
 source("lib/mytheme.r")

@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 #
 #
-# Script: RainWeek.r
+# Script: TempMaxMin.r
 #
 # Stand: 2022-01-21
 # (c) 2021 by Thomas Arend, Rheinbach
@@ -38,6 +38,7 @@ if (rstudioapi::isAvailable()){
 }
 
 WD <- paste(SD[1:(length(SD))],collapse='/')
+
 if ( SD[length(SD)] != "R" ) {
   
   WD <- paste( WD,"/R", sep = '')
@@ -48,11 +49,10 @@ setwd(WD)
 # print(WD)
 
 source("lib/myfunctions.r")
-source("lib/mytheme.r")
 source("lib/sql.r")
 
-outdir <- '../png/Rain/'
-dir.create( outdir , showWarnings = FALSE, recursive = FALSE, mode = "0777")
+outdir <- '../png/Temperatur/'
+dir.create( outdir , showWarnings = FALSE, recursive = TRUE, mode = "0777" )
 
 MyPos <- list( lat = 50.620941424520026, long = 6.961696767218697)
 
@@ -63,52 +63,53 @@ T_Date <- function( Datum , intercept, slope) {
 }
 
 SQL <- paste( 'select'
-              , '  year(Datum) as Jahr'
-              , ', week(Datum, 3) as Kw '
-              , ', inch_mm(sum(Regen)) as Regen'
-              , 'from ( '
+              , 'date(dateutc) as Datum '
+              , ',"Min" as Parameter '
+              , ', Fahrenheit_Celsius(min(tempf)) as Temperatur'
+              , 'from reports'
+              , 'where id = 1'
+              , 'group by Datum'
+              , 'union'
               , 'select'
-              , 'date(convert_tz(dateutc,"GMT","Europe/Berlin")) as Datum '
-              , ', max(dailyrainin) as Regen'
-              , 'from reports '
-              , 'group by Datum ) as F'
-              , 'group by Jahr, Kw'
+              , 'date(dateutc) as Datum '
+              , ',"Max" as Parameter '
+              , ', Fahrenheit_Celsius(max(tempf)) as Temperatur'
+              , 'from reports'
+              , 'where id = 1'
+              , 'group by Datum'
               , ';'
 )
 
-rain <- RunSQL(SQL)
-rain[,Kalenderwoche := factor(Kw, levels = 1:53, labels = paste( 'Kw', 1:53 ) ) ]
-rain[,Jahre := factor(Jahr, levels = unique(Jahr), labels = unique(Jahr) ) ]
+TT <- RunSQL(SQL)
 
 today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
-rain %>% ggplot( aes( x = Kw, y = Regen ) ) + 
-  geom_bar( aes( fill = Jahre )
-            , position = position_dodge2( width = 0.9)
-            , stat = 'identity' ) +
-  geom_text( aes(label = round(Regen,1) )
-             , position = position_dodge2( width = 0.9 )
-             , vjust = -0.5 
-             , size = 2  ) +
-  
-  # scale_x_date() +
+TT %>% ggplot() + 
+  geom_density( aes( x = Temperatur
+                       , colour = Parameter 
+                       # , fill = Parameter
+                       ) 
+                #, binwidth = 0.5 
+                ) +
+  scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
-#  scale_y_break ( c(150,290) ) +
+  # facet_wrap ( vars( Parameter ) ) +
+  labs(  title = paste( 'Temperaturen Rheinbach - Mittelerde' )
+         , subtitle = 'dnt WeatherScreen Pro'
+         , x = 'Temperatur'
+         , y = 'Dichte'
+         , colour = 'Temperatur'
+         # , fill = 'Temperatur'
+         , caption = paste( "Stand:", heute )
+  ) +
   theme_ipsum() +
   theme(  legend.position="right"
-          , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
-  ) +
-  labs(  title = paste( 'Niederschlag' )
-         , subtitle = 'Wetterstation Mittelerde, Rheinbach'
-         , x = "Kalenderwoche"
-         , y = "Niederschlag [mm]"
-         , caption = paste( "Stand:", heute )
-  ) -> P
+          , axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=0.5)
+  ) -> p
 
-ggsave(  
-  file = paste( outdir, 'RainWeek.png', sep='')
-  , plot = P
+ggsave(  file = paste(outdir , 'TempMaxMin.png', sep='')
+  , plot = p
   , device = 'png'
   , bg = "white"
   , width = 1920

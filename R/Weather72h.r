@@ -23,8 +23,7 @@ library(viridis)
 library(hrbrthemes)
 library(scales)
 library(ragg)
-#library(extrafont)
-#extrafont::loadfonts()
+
 
 # Set Working directory to git root
 
@@ -49,7 +48,7 @@ if ( SD[length(SD)] != "R" ) {
 }
 
 setwd(WD)
-print(WD)
+# print(WD)
 
 source("lib/myfunctions.r")
 source("lib/mytheme.r")

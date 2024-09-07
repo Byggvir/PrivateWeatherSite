@@ -8,8 +8,6 @@
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <- "TempCYearMaxMin"
-
 options(OutDec = ',')
 
 require(data.table)
@@ -23,8 +21,6 @@ library(viridis)
 library(hrbrthemes)
 library(scales)
 library(ragg)
-#library(extrafont)
-#extrafont::loadfonts()
 
 # Set Working directory to git root
 
@@ -49,10 +45,9 @@ if ( SD[length(SD)] != "R" ) {
 }
 
 setwd(WD)
-print(WD)
+# print(WD)
 
 source("lib/myfunctions.r")
-source("lib/mytheme.r")
 source("lib/sql.r")
 
 outdir <- '../png/Temperatur/'
@@ -77,7 +72,7 @@ SQL <- paste( 'select'
               , 'group by Datum ;'
 )
 daten <- RunSQL(SQL)
-daten$Jahre <- factor(daten$Jahr, levels = 2021:2023, labels = paste('Jahr', 2021:2023))
+daten[, Jahre := factor(Jahr, levels = unique(Jahr), labels = paste('Jahr', unique(Jahr))) ]
 
 today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
@@ -88,7 +83,7 @@ ci1 <- confint(ra1, CI=0.95)
 ra2 <- lm( minT ~ cospi( as.numeric(Datum - as.Date("2021-07-20"))/182.5), data = daten)
 ci2 <- confint(ra2, CI=0.95)
 
-daten %>% ggplot() + 
+daten %>% filter( Jahr < 2024 ) %>% ggplot() + 
   geom_smooth( aes( x = Datum, y = maxT, colour = 'Max' ), method = 'loess', formula = y ~ x, linewidth = 1 ) +
   geom_smooth( aes( x = Datum, y = minT, colour = 'Min' ), method = 'loess', formula = y ~ x, linewidth = 1 ) +
   
@@ -115,8 +110,7 @@ daten %>% ggplot() +
          , caption = paste( "Stand:", heute )
   ) -> P
 
-ggsave(  paste( 
-  file = outdir, MyScriptName, '_T.png', sep='')
+ggsave( file = paste( outdir, 'Temp_T.png', sep='' )
   , plot = P
   , device = 'png'
   , bg = "white"
@@ -128,7 +122,8 @@ ggsave(  paste(
 
 # daten %>% ggplot(aes( x = cospi( as.numeric(Datum - as.Date("2021-07-20"))/182.5), y = maxT, colour = Jahre )) + 
 
-daten %>% ggplot(aes( x = yday(Datum), y = maxT, colour = Jahre )) + 
+daten %>% filter( Jahr < 2025 ) %>% 
+  ggplot(aes( x = yday(Datum), y = maxT, colour = Jahre )) + 
   geom_point( size = 2, alpha = 0.3 ) +
   geom_smooth( method = 'loess', formula = y ~ x )  +
 #  geom_abline(intercept = ci1[1,1], slope = ci1[2,1]) +
@@ -148,8 +143,7 @@ daten %>% ggplot(aes( x = yday(Datum), y = maxT, colour = Jahre )) +
          , caption = paste( "Stand:", heute )
   ) -> P2
 
-ggsave(  paste( 
-  file = outdir, MyScriptName, '_S.png', sep='')
+ggsave(  file = paste( outdir, 'Temp_S.png', sep = '' )
   , plot = P2
   , device = 'png'
   , bg = "white"

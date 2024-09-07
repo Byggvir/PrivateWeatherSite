@@ -8,8 +8,6 @@
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <- "RainDaily"
-
 options(OutDec = ',')
 
 require(data.table)
@@ -49,7 +47,7 @@ if (rstudioapi::isAvailable()){
 
 WD <- paste(SD[1:(length(SD)-1)],collapse='/')
 setwd(WD)
-print(WD)
+# print(WD)
 
 source("R/lib/myfunctions.r")
 source("R/lib/sql.r")
@@ -65,10 +63,7 @@ T_Date <- function( Datum , intercept, slope) {
   
 }
 
-SQL <- paste( 'select date(dateutc) as Datum'
-              , ', inch_mm(max(dailyrainin)) as RR'
-              , 'from reports'
-              , 'group by Datum;'
+SQL <- paste( 'select * from RainDay;'
 )
 
 
@@ -124,7 +119,38 @@ RR %>% filter( Datum > "2022-12-31" ) %>% ggplot( aes( x = Datum, y = RR)) +
   ) -> P
 
 ggsave(  
-  file = paste( outdir, MyScriptName, '.png', sep='')
+  file = paste( outdir, 'Daily.png', sep='')
+  , plot = P
+  , device = 'png'
+  , bg = "white"
+  , width = 1920
+  , height = 1080
+  , units = "px"
+  , dpi = 144
+)
+
+setorder(RR,RR)
+
+ggplot_build( ggplot(data = RR %>% filter(RR >0)) + stat_ecdf( aes(RR) ) ) -> d
+RR %>% filter( RR > 0 & RR <= 10.0) %>%
+    ggplot( aes( x = RR)) +
+    # stat_ecdf(geom = 'line' ) +
+    geom_density( ) +
+    scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+    scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+    theme_ipsum() +
+    theme(  legend.position="right"
+            , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+    ) +
+    labs(  title = paste( 'Dichte des täglichen Niederschlag' )
+           , subtitle = 'Private Wetterstation Mittelerde, Rheinbach'
+           , x = "Niederschlag [mm]"
+           , y = "Dichte"
+           , caption = paste( "Stand:", heute )
+    ) -> P
+
+ggsave(  
+  file = paste( outdir, 'Daily_Density.png', sep='')
   , plot = P
   , device = 'png'
   , bg = "white"
@@ -159,7 +185,7 @@ DaysWithoutRain %>% ggplot() +
   ) -> P
 
 ggsave(  
-  file = paste( outdir, MyScriptName, '_DwoR.png', sep='')
+  file = paste( outdir, 'Days_without_rain.png', sep='')
   , plot = P
   , device = 'png'
   , bg = "white"
@@ -168,3 +194,41 @@ ggsave(
   , units = "px"
   , dpi = 144
 )
+
+SQL = 'select * from RainDayHist;'
+RRSum = RunSQL ( SQL = SQL )
+S = sum(RRSum$RR)
+RRSum$y = S / RRSum$Anzahl
+
+ra = lm ( data = RRSum, formula = y ~ RR )
+a = ra$coefficients[1]
+b = ra$coefficients[2]
+
+RRSum %>% 
+  ggplot( aes( x = RR, y = Anzahl / S ) ) +
+  geom_bar( stat = 'identity' ) +
+  geom_function( fun = function(x) { 1 / ( a + b * x ) } ) +
+  scale_x_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  theme_ipsum() +
+  theme(  legend.position="right"
+          , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+  ) +
+  labs(  title = paste( 'Histogramm des täglichen Niederschlag' )
+         , subtitle = 'Private Wetterstation Mittelerde, Rheinbach'
+         , x = "Niederschlag [mm]"
+         , y = "Dichte"
+         , caption = paste( "Stand:", heute )
+  ) -> P
+
+ggsave(  
+  file = paste( outdir, 'Daily_Hist.png', sep='')
+  , plot = P
+  , device = 'png'
+  , bg = "white"
+  , width = 1920
+  , height = 1080
+  , units = "px"
+  , dpi = 144
+)
+

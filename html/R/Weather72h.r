@@ -225,7 +225,7 @@ ggsave(  paste(
 
 daten %>%  filter(Zeit > today - Zeitraum / 24) %>% ggplot() + 
   geom_point( aes( x = Zeit, y = windspeed, colour = 'Geschwindigkeit' ), size = 1 ) +
-  geom_smooth( aes( x = Zeit, y = windspeed, colour = 'Geschwindigkeit' ), size = 1 ) +
+  geom_smooth( aes( x = Zeit, y = windspeed, colour = 'Geschwindigkeit' ), method = 'loess', formula = 'y ~ x', size = 1 ) +
   
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
@@ -316,3 +316,46 @@ ggsave(  paste(
 )
 
 }
+
+Tage = 14
+SQL <- paste( 
+  'select * from AvgTemp where id = 1 and Datum  > SUBDATE(date(now()), INTERVAL ', Tage, 'DAY);'
+)
+
+AvgTemp <- RunSQL(SQL)
+
+AvgTemp %>% ggplot( aes (x = Datum) ) + 
+  geom_ribbon( aes (ymin = MinT, ymax= MaxT ), fill = 'lightgrey', color = NA ) +
+  geom_line ( aes( y = AvgT, colour = 'Temperatur ø'   ), linewidth = 1 ) +
+  geom_line ( aes( y = MaxT, colour = 'Temperatur max' ), linewidth = 1 ) +
+  geom_line ( aes( y = MinT, colour = 'Temperatur min'  ), linewidth = 1 ) +
+  geom_point( aes( y = AvgT, colour = 'Temperatur ø'   ), size = 2 ) +
+  geom_point( aes( y = MaxT, colour = 'Temperatur max' ), size = 2 ) +
+  geom_point( aes( y = MinT, colour = 'Temperatur min' ), size = 2 ) +
+  
+  scale_x_date( ) + # breaks = '1 hour' ) + 
+  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+
+  theme_ipsum() +
+  theme(  legend.position="right"
+          , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+  ) +
+  labs(  title = paste( 'Tagestemperatur', Stations$name[1] )
+         , subtitle = paste( 'Letzte', Zeitraum,'Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
+         , x = "Datum"
+         , y = "Temperatur [°]"
+         , colour = 'Legende'
+         , caption = paste( "Stand:", heute )
+  ) -> P
+
+ggsave(  paste( 
+  file = '../png/avgtemp_',Zeitraum,'h.svg', sep='')
+  , plot = P
+  , device = 'svg'
+  , bg = "white"
+  , width = 1920
+  , height = 1080
+  , units = "px"
+  , dpi = 150
+)
+

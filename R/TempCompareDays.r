@@ -8,8 +8,6 @@
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <- "TempCompareDays.r"
-
 options(OutDec=',')
 
 require(data.table)
@@ -52,22 +50,24 @@ source("lib/myfunctions.r")
 source("lib/sql.r")
 
 today <- Sys.Date()
-heute <- format(today, "%Y%m%d")
+heute <- format(today , "%Y%m%d")
+Tag <- format(today - 1, "%Y-%m-%d")
+
 
 outdir <- '../png/Temperatur/'
 dir.create( outdir , showWarnings = FALSE, recursive = TRUE, mode = "0777" )
 
 SQL <- paste( 
     'select dateutc as Datum, 1 as Tag, Fahrenheit_Celsius(tempf) as temperature'
-  , ' from reports where date(dateutc) = "2022-07-19" '
+  , ' from reports where date(dateutc) = adddate(', paste0('"', Tag, '"'), ',-366 )'
   , ' union '
   , 'select dateutc as Datum, 2 as Tag, Fahrenheit_Celsius(tempf) as temperature'
-  , ' from reports where date(dateutc) =', paste0('"', heute, '"'), ';'
+  , ' from reports where date(dateutc) =', paste0('"', Tag, '"'), ';'
 )
 
 daten <- RunSQL(SQL)
-daten$Zeit <- hour(daten$Datum)+ minute(daten$Datum) / 60 + second(daten$Datum) / 3600
-daten$Tage <- factor( daten$Tag, levels = 1:2, labels = c ("Jahr 2022","Jahr 2023") )
+daten[, Zeit := hour( Datum) + minute(Datum) / 60 + second(Datum) / 3600 ]
+daten[, Tage := factor( Tag, levels = 1:2, labels = c ( "Jahr 2023", "Jahr 2024") ) ]
                      
 daten %>% ggplot() +
   geom_line( aes( x = Zeit, y = temperature, colour = Tage ), linewidth = 2 ) +
@@ -83,7 +83,7 @@ daten %>% ggplot() +
             , face = "bold.italic"
           ) ) +
   labs(  title = paste( 'Temperaturvergleich zweier Tage' )
-         , subtitle = paste('2022-07-19 vs',format(today, "%Y-%m-%d") )
+         , subtitle = paste(Tag )
          , x = "UTC [h]"
          , y = "Temperatur [°C]"
          , colour = 'Legende'

@@ -62,7 +62,7 @@ ToCelsius <- function(TemperatureK) {
 #
 # Sättigungsdampfdruck in [Pa]
 #
-# Achtung: Üblich sind [hPa])
+# Achtung: Üblich sind [hPa]
 #
 
 MagnusFormel <- function (TemperatureK, ice=FALSE) {

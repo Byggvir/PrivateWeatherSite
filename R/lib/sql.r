@@ -28,7 +28,7 @@ RunSQL <- function (
   
   dbDisconnect(DB)
   
-  return(dbRows)
+  return(as.data.table(dbRows))
 }
 
 ExecSQL <- function (

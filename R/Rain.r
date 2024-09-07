@@ -8,8 +8,6 @@
 # E-Mail: thomas@arend-rhb.de
 #
 
-MyScriptName <- "Rain"
-
 options(OutDec = ',')
 
 require(data.table)
@@ -47,7 +45,7 @@ if ( SD[length(SD)] != "R" ) {
 }
 
 setwd(WD)
-print(WD)
+# print(WD)
 
 source("lib/myfunctions.r")
 source("lib/mytheme.r")
@@ -65,28 +63,22 @@ T_Date <- function( Datum , intercept, slope) {
 }
 
 SQL <- paste( 'select'
-              , '  year(Datum) as Jahr'
-              , ', month(Datum) as Monat '
-              , ', sum(Regen) as Regen'
-              , 'from ( '
-              , 'select'
-              , 'date(dateutc) as Datum '
-              , ', inch_mm(max(dailyrainin)) as Regen'
-              , 'from reports '
-              , 'group by Datum ) as F'
+              , '  year(dateutc) as Jahr'
+              , ', month(dateutc) as Monat '
+              , ', inch_mm(max(monthlyrainin)) as Regen'
+              , 'from reports'
               , 'group by Jahr, Monat'
               , ';'
 )
 
 rain <- RunSQL(SQL)
-
-rain$Monate <- factor(rain$Monat, levels = 1:12, labels = Monatsnamen)
-rain$Jahre <- factor(rain$Jahr, levels = unique(rain$Jahr), labels = unique(rain$Jahr) )
+rain[, Monate := factor(Monat, levels = 1:12, labels = Monatsnamen) ]
+rain[, Jahre := factor(Jahr, levels = unique(Jahr), labels = unique(Jahr) ) ]
 
 today <- Sys.Date()
 heute <- format(today, "%Y%m%d")
 
-rain %>% ggplot( aes( x = Monate, y = Regen ) ) + 
+rain %>% filter( Jahr > 2021 ) %>% ggplot( aes( x = Monate, y = Regen ) ) + 
   geom_bar( aes(fill = Jahre ), position = position_dodge2( width = 0.9 ), stat = 'identity' ) +
   geom_text( aes(label = round(Regen,1) )
             , position = position_dodge2( width = 0.9 )
@@ -107,7 +99,44 @@ rain %>% ggplot( aes( x = Monate, y = Regen ) ) +
   ) -> P
 
 ggsave(  
-  file = paste( outdir, MyScriptName, '.png', sep='')
+  file = paste( outdir, 'Rain.png', sep='')
+  , plot = P
+  , device = 'png'
+  , bg = "white"
+  , width = 1920
+  , height = 1080
+  , units = "px"
+  , dpi = 144
+)
+
+CurMonth = month(today)
+
+rain %>% filter( Monat == CurMonth ) %>% ggplot( aes( x = Jahre, y = Regen ) ) + 
+  geom_bar( aes(fill = Monate )
+            , position = position_dodge2( width = 0.9 )
+            , stat = 'identity' 
+            , show.legend = FALSE ) +
+  geom_text( aes(y = 0 , label = round(Regen,1) )
+             , position = position_dodge2( width = 0.9 )
+             , vjust =  0
+             , size = 12  ) +
+  # scale_x_date() +
+  scale_fill_manual( values = c('cyan')  ) +
+  scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
+  #  scale_y_break ( c(150,290) ) +
+  theme_ipsum() +
+  theme(  legend.position="right"
+          , axis.text.x = element_text(angle = 90, vjust = 0.5 , hjust=1)
+  ) +
+  labs(  title = paste( 'Niederschlag im', Monatsnamen[CurMonth] )
+         , subtitle = 'Wetterstation Mittelerde, Rheinbach'
+         , x = "Datum"
+         , y = "Niederschlag [mm]"
+         , caption = paste( "Stand:", heute )
+  ) -> P
+
+ggsave(  
+  file = paste( outdir, 'Rain-', CurMonth, '_', Monatsnamen[CurMonth], '.png', sep='')
   , plot = P
   , device = 'png'
   , bg = "white"
