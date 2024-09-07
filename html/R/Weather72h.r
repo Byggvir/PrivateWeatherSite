@@ -325,7 +325,7 @@ SQL <- paste(
 AvgTemp <- RunSQL(SQL)
 
 AvgTemp %>% ggplot( aes (x = Datum) ) + 
-  geom_ribbon( aes (ymin = MinT, ymax= MaxT ), fill = 'lightgrey', color = NA ) +
+  geom_ribbon( aes (ymin = MinT, ymax= MaxT ), fill = 'lightgrey', color = NA , show.legend = FALSE ) +
   geom_line ( aes( y = AvgT, colour = 'Temperatur ø'   ), linewidth = 1 ) +
   geom_line ( aes( y = MaxT, colour = 'Temperatur max' ), linewidth = 1 ) +
   geom_line ( aes( y = MinT, colour = 'Temperatur min'  ), linewidth = 1 ) +
@@ -340,7 +340,7 @@ AvgTemp %>% ggplot( aes (x = Datum) ) +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
-  labs(  title = paste( 'Tagestemperatur', Stations$name[1] )
+  labs(  title = paste( 'Tagestemperaturen', Stations$name[1] )
          , subtitle = paste( 'Letzte', Zeitraum,'Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "Datum"
          , y = "Temperatur [°]"
@@ -349,7 +349,7 @@ AvgTemp %>% ggplot( aes (x = Datum) ) +
   ) -> P
 
 ggsave(  paste( 
-  file = '../png/avgtemp_',Zeitraum,'h.svg', sep='')
+  file = '../png/avgtemp_', Tage,'d.svg', sep='')
   , plot = P
   , device = 'svg'
   , bg = "white"
