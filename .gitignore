@@ -5,3 +5,4 @@
 html/.php_cs.cache
 html/.phptidy-cache
 html/*~
+*.png

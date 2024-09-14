@@ -23,6 +23,7 @@ library(viridis)
 library(hrbrthemes)
 library(scales)
 library(ragg)
+library(jsonlite)
 
 # Set Working directory to git root
 
@@ -225,7 +226,7 @@ ggsave(  paste(
 
 daten %>%  filter(Zeit > today - Zeitraum / 24) %>% ggplot() + 
   geom_point( aes( x = Zeit, y = windspeed, colour = 'Geschwindigkeit' ), size = 1 ) +
-  geom_smooth( aes( x = Zeit, y = windspeed, colour = 'Geschwindigkeit' ), method = 'loess', formula = 'y ~ x', size = 1 ) +
+  geom_smooth( aes( x = Zeit, y = windspeed, colour = 'Geschwindigkeit' ), method = 'loess', formula = 'y ~ x', linewidth = 1 ) +
   
   scale_x_datetime( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
@@ -317,6 +318,30 @@ ggsave(  paste(
 
 }
 
+WMO <- jsonlite::read_json('http://worldweather.wmo.int/de/json/56_de.xml')
+
+n = length(WMO$city$forecast$forecastDay)
+
+WeatherForecast = data.table(
+  id = rep(1,n)
+  , Datum = rep(today,n)
+  , MinT = rep(-999,n)
+  , MaxT = rep(-999,n)
+  , AvgT = rep(-999,n)
+  , SD   = rep(0,n)
+)
+
+for ( i in 1:n) {
+  
+  wf = unlist( WMO$city$forecast$forecastDay[[i]])
+  
+  WeatherForecast[i,Datum := as.Date(wf[1])]
+  WeatherForecast[i,MinT := as.numeric( wf[4]) ]
+  WeatherForecast[i,MaxT := as.numeric( wf[5]) ]
+  WeatherForecast[i,AvgT := ( as.numeric(wf[5])+as.numeric(wf[4]) )/2 ]
+  
+}
+
 Tage = 14
 SQL <- paste( 
   'select * from AvgTemp where id = 1 and Datum  > SUBDATE(date(now()), INTERVAL ', Tage, 'DAY);'
@@ -324,6 +349,7 @@ SQL <- paste(
 
 AvgTemp <- RunSQL(SQL)
 
+AvgTemp <- rbind(AvgTemp,WeatherForecast)
 AvgTemp %>% ggplot( aes (x = Datum) ) + 
   geom_ribbon( aes (ymin = MinT, ymax= MaxT ), fill = 'lightgrey', color = NA , show.legend = FALSE ) +
   geom_line ( aes( y = AvgT, colour = 'Temperatur ø'   ), linewidth = 1 ) +
@@ -332,7 +358,7 @@ AvgTemp %>% ggplot( aes (x = Datum) ) +
   geom_point( aes( y = AvgT, colour = 'Temperatur ø'   ), size = 2 ) +
   geom_point( aes( y = MaxT, colour = 'Temperatur max' ), size = 2 ) +
   geom_point( aes( y = MinT, colour = 'Temperatur min' ), size = 2 ) +
-  
+  geom_vline( xintercept = as.Date(today), linewidth = 4 ) +
   scale_x_date( ) + # breaks = '1 hour' ) + 
   scale_y_continuous( labels = function (x) format(x, big.mark = ".", decimal.mark= ',', scientific = FALSE ) ) +
 
@@ -340,12 +366,12 @@ AvgTemp %>% ggplot( aes (x = Datum) ) +
   theme(  legend.position="right"
           , axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
   ) +
-  labs(  title = paste( 'Tagestemperaturen', Stations$name[1] )
-         , subtitle = paste( 'Letzte', Zeitraum,'Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
+  labs(  title = paste( 'Tagestemperaturen mit ', n, 'Tages-Vorhersage für Köln', Stations$name[1] )
+         , subtitle = paste( 'Letzte', Tage,'Tage - Stand:', format(Sys.time(), "%Y-%m-%d %H:%M" ))
          , x = "Datum"
          , y = "Temperatur [°]"
          , colour = 'Legende'
-         , caption = paste( "Stand:", heute )
+         , caption = paste( 'Quelle: Eigene Daten und WMO World Weather Information Servicei\nStand:', heute )
   ) -> P
 
 ggsave(  paste( 
