@@ -124,7 +124,7 @@ ggsave(
 )
 
 
-for ( CurMonth in 1:12 ) {
+for ( CurMonth in month(today) ) {
   
   SQL = paste('select * from baseline where Stations_Id = 1 and Monat =', CurMonth, ';')
   BL = RunSQL(SQL = SQL);

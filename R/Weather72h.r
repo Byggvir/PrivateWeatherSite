@@ -23,6 +23,7 @@ library(viridis)
 library(hrbrthemes)
 library(scales)
 library(ragg)
+library(jsonlite)
 
 
 # Set Working directory to git root
