@@ -46,6 +46,7 @@ $SQL = "SELECT "
   . ", format(inch_mm(dailyrainin),1) as RainDay"
   . ", format(inch_mm(weeklyrainin),1) as RainWeek"
   . ", format(inch_mm(monthlyrainin),1) as RainMonth"
+  . ", format(inch_mm(yearlyrainin),1) as RainYear"
   . "  FROM reports where sensor = "
   . $sensor
   . " order by dateutc desc limit 10;";
@@ -63,6 +64,7 @@ $SQL = "SELECT "
     . '<th>Rain<br />day [mm]</th>'
     . '<th>Rain<br />week [mm]</th>'
     . '<th>Rain<br />month [mm]</th>'
+    . '<th>Rain<br />year [mm]</th>'
     . '</tr>';
     
     while ($result = $reports->fetch_assoc()) {
@@ -77,6 +79,7 @@ $SQL = "SELECT "
       echo '<td class="value">' . $result["RainDay"] . '</td>' . "\n" ;
       echo '<td class="value">' . $result["RainWeek"] . '</td>' . "\n" ;
       echo '<td class="value">' . $result["RainMonth"] . '</td>' . "\n" ;
+      echo '<td class="value">' . $result["RainYear"] . '</td>' . "\n" ;
       echo '</tr>' . "\n";
         
     }/* end while */
